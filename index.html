@@ -101,6 +101,10 @@
                 <i class="fa-solid fa-wallet"></i>
                 <span>Prestação de Contas (Por Competência)</span>
             </button>
+            <button onclick="switchTab('sugestoes')" id="btn-sugestoes" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Sugestões & Benfeitorias</span>
+            </button>
             <button onclick="switchTab('reformas')" id="btn-reformas" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
                 <i class="fa-solid fa-helmet-safety"></i>
                 <span>Regras de Reformas</span>
@@ -310,7 +314,36 @@
             </div>
         </section>
 
-        <!-- TAB 4: REFORMAS -->
+        <!-- TAB 4: SUGESTÕES & BENFEITORIAS -->
+        <section id="tab-sugestoes" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Sugestões de Melhoria & Benfeitorias</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Propostas de valorização patrimonial, inovação e aperfeiçoamento para o condomínio.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <select id="filter-sug-cat" onchange="renderSugestoes()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="ALL">Todas Categorias</option>
+                        <option value="Sustentabilidade">Sustentabilidade</option>
+                        <option value="Lazer & Bem-estar">Lazer & Bem-estar</option>
+                        <option value="Segurança & Manutenção">Segurança & Manutenção</option>
+                        <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
+                    </select>
+
+                    <button onclick="openAddSugestaoModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Nova Sugestão / Benfeitoria</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sugestoes Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="sugestoes-grid">
+                <!-- Dynamically populated cards -->
+            </div>
+        </section>
+
+        <!-- TAB 5: REFORMAS -->
         <section id="tab-reformas" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
@@ -364,7 +397,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: ENERGIA & SAVE -->
+        <!-- TAB 6: ENERGIA & SAVE -->
         <section id="tab-energia" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4 flex justify-between items-center">
@@ -485,6 +518,70 @@
         </div>
     </div>
 
+    <!-- MODAL: ADD / EDIT SUGESTÃO / BENFEITORIA -->
+    <div id="modal-sugestao" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="sugestao-modal-title" class="font-bold text-slate-900 text-base">Nova Sugestão ou Benfeitoria</h3>
+                <button onclick="closeModal('modal-sugestao')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <input type="hidden" id="sug-edit-id" value="">
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Título da Benfeitoria / Sugestão</label>
+                    <input type="text" id="sug-titulo" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Automação do Portão de Veículos">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Categoria</label>
+                        <select id="sug-categoria" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="Sustentabilidade">Sustentabilidade</option>
+                            <option value="Lazer & Bem-estar">Lazer & Bem-estar</option>
+                            <option value="Segurança & Manutenção">Segurança & Manutenção</option>
+                            <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
+                        <select id="sug-prioridade" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média">Média</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Custo Estimado (R$)</label>
+                        <input type="text" id="sug-custo" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Status da Proposta</label>
+                        <select id="sug-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="Proposta">Proposta</option>
+                            <option value="Em Análise">Em Análise</option>
+                            <option value="Aprovada">Aprovada</option>
+                            <option value="Em Execução">Em Execução</option>
+                            <option value="Concluída">Concluída</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição e Justificativa</label>
+                    <textarea id="sug-desc" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Explique os benefícios e detalhes da melhoria..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <button onclick="closeModal('modal-sugestao')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="saveSugestao()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Sugestão</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Application Logic -->
     <script>
         // Initial Mock Data derived from HN Engenharia & Vistorias
@@ -522,20 +619,23 @@
             { id: 'acc_8', competencia: '2026-10', name: "I.P.T.U.", type: "devedor", value: 1850.00, icon: "fa-file-invoice-dollar" }
         ];
 
+        let sugestoesData = JSON.parse(localStorage.getItem('horizon_sugestoes')) || [
+            { id: 1, titulo: "Instalação de Placas Fotovoltaicas no Telhado", categoria: "Sustentabilidade", prioridade: "Alta", custo: 45000, status: "Em Análise", desc: "Projeto para redução de custo de energia das áreas comuns." },
+            { id: 2, titulo: "Modernização da Academia com Novos Aparelhos", categoria: "Lazer & Bem-estar", prioridade: "Média", custo: 18000, status: "Aprovada", desc: "Substituição de esteiras e inclusão de kit de halteres." },
+            { id: 3, titulo: "Reforço na Iluminação LED da Garagem", categoria: "Segurança & Manutenção", prioridade: "Urgente", custo: 6500, status: "Em Execução", desc: "Atender vistorias e melhorar visibilidade nas vagas do 1º SS." }
+        ];
+
         let globalRefMonth = localStorage.getItem('horizon_global_ref') || '2026-10';
 
         function updateGlobalReference(val) {
             globalRefMonth = val;
             localStorage.setItem('horizon_global_ref', val);
-            
             const formatted = formatMonthYear(val);
-            document.getElementById('header-subtitle').innerText = `Portal Administrativo & Monitoramento — Ref: ${formatted}`;
-            document.getElementById('dash-badge-ref').innerText = `Relatório Executivo Consolidado — ${formatted}`;
+            document.getElementById('dash-badge-ref').innerText = `Relatório Executivo Consolidado - Ref. ${formatted}`;
             document.getElementById('energia-ref-label').innerText = formatted;
-            
-            // Also sync finance filter to match global reference if convenient
             document.getElementById('finance-month-filter').value = val;
             renderAccounts();
+            renderSugestoes();
             
             showToast(`Mês de Referência Global atualizado para ${formatted}`);
         }
@@ -650,6 +750,138 @@
             document.getElementById('box-competencia-badge').innerText = `Competência: ${monthText}`;
 
             localStorage.setItem('horizon_accounts', JSON.stringify(accountsData));
+        }
+
+        // Render Sugestões & Benfeitorias
+        function renderSugestoes() {
+            const catFilter = document.getElementById('filter-sug-cat').value;
+            const grid = document.getElementById('sugestoes-grid');
+            grid.innerHTML = '';
+
+            const filtered = sugestoesData.filter(item => {
+                return catFilter === 'ALL' || item.categoria === catFilter;
+            });
+
+            filtered.forEach(item => {
+                let badgeColor = 'bg-slate-100 text-slate-700';
+                if(item.status === 'Aprovada') badgeColor = 'bg-emerald-100 text-emerald-800';
+                else if(item.status === 'Em Execução') badgeColor = 'bg-indigo-100 text-indigo-800';
+                else if(item.status === 'Concluída') badgeColor = 'bg-blue-100 text-blue-800';
+                else if(item.status === 'Em Análise') badgeColor = 'bg-amber-100 text-amber-800';
+
+                let prioColor = 'text-slate-600';
+                if(item.prioridade === 'Urgente' || item.prioridade === 'Alta') prioColor = 'text-rose-600 font-bold';
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg">${item.categoria}</span>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeColor}">${item.status}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mt-2">${item.titulo}</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Custo Estimado</span>
+                            <span class="font-bold text-slate-900">R$ ${(item.custo || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Prioridade</span>
+                            <span class="${prioColor}">${item.prioridade}</span>
+                        </div>
+                        <div class="space-x-1">
+                            <button onclick="editSugestao(${item.id})" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteSugestao(${item.id})" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center text-slate-500 text-xs">
+                        <i class="fa-solid fa-lightbulb text-2xl mb-2 text-amber-400"></i>
+                        <p>Nenhuma sugestão ou benfeitoria encontrada nesta categoria.</p>
+                    </div>
+                `;
+            }
+
+            localStorage.setItem('horizon_sugestoes', JSON.stringify(sugestoesData));
+        }
+
+        // Sugestao Modal Management
+        function openAddSugestaoModal() {
+            document.getElementById('sugestao-modal-title').innerText = "Nova Sugestão ou Benfeitoria";
+            document.getElementById('sug-edit-id').value = "";
+            document.getElementById('sug-titulo').value = "";
+            document.getElementById('sug-categoria').value = "Sustentabilidade";
+            document.getElementById('sug-prioridade').value = "Média";
+            document.getElementById('sug-custo').value = "";
+            document.getElementById('sug-status').value = "Proposta";
+            document.getElementById('sug-desc').value = "";
+            document.getElementById('modal-sugestao').classList.remove('hidden');
+        }
+
+        function editSugestao(id) {
+            const item = sugestoesData.find(s => s.id === id);
+            if(item) {
+                document.getElementById('sugestao-modal-title').innerText = `Editar Sugestão #${item.id}`;
+                document.getElementById('sug-edit-id').value = item.id;
+                document.getElementById('sug-titulo').value = item.titulo;
+                document.getElementById('sug-categoria').value = item.categoria;
+                document.getElementById('sug-prioridade').value = item.prioridade;
+                document.getElementById('sug-custo').value = item.custo.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('sug-status').value = item.status;
+                document.getElementById('sug-desc').value = item.desc;
+                document.getElementById('modal-sugestao').classList.remove('hidden');
+            }
+        }
+
+        function saveSugestao() {
+            const editId = document.getElementById('sug-edit-id').value;
+            const titulo = document.getElementById('sug-titulo').value.trim();
+            const categoria = document.getElementById('sug-categoria').value;
+            const prioridade = document.getElementById('sug-prioridade').value;
+            const custo = parseMoney(document.getElementById('sug-custo').value);
+            const status = document.getElementById('sug-status').value;
+            const desc = document.getElementById('sug-desc').value.trim();
+
+            if(!titulo || !desc) {
+                alert("Preencha o título e a descrição da sugestão.");
+                return;
+            }
+
+            if(!editId) {
+                const newId = sugestoesData.length > 0 ? Math.max(...sugestoesData.map(s => s.id)) + 1 : 1;
+                sugestoesData.unshift({ id: newId, titulo, categoria, prioridade, custo, status, desc });
+                showToast("Sugestão adicionada com sucesso!");
+            } else {
+                const item = sugestoesData.find(s => s.id == editId);
+                if(item) {
+                    item.titulo = titulo;
+                    item.categoria = categoria;
+                    item.prioridade = prioridade;
+                    item.custo = custo;
+                    item.status = status;
+                    item.desc = desc;
+                    showToast("Sugestão atualizada com sucesso!");
+                }
+            }
+
+            closeModal('modal-sugestao');
+            renderSugestoes();
+        }
+
+        function deleteSugestao(id) {
+            if(confirm("Deseja remover esta sugestão ou benfeitoria?")) {
+                sugestoesData = sugestoesData.filter(s => s.id !== id);
+                renderSugestoes();
+                showToast("Sugestão removida com sucesso!", "error");
+            }
         }
 
         // Account Modal Management
@@ -849,6 +1081,7 @@
             updateGlobalReference(globalRefMonth);
             renderTable();
             renderAccounts();
+            renderSugestoes();
         };
     </script>
 
