@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condomínio Horizon Paraíso - Painel de Gestão e Monitoramento</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Print Styles for Perfect PDF Export */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-before: always;
+            }
+            .print-shadow {
+                box-shadow: none !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-full flex flex-col justify-between">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-medium">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg">Ação realizada com sucesso!</span>
+    </div>
+
+    <!-- Top Navbar -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-inner flex items-center justify-center">
+                    <i class="fa-solid fa-building-shield text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base tracking-wide" id="header-condo-title">Condomínio Horizon Paraíso</h1>
+                    <p class="text-xs text-slate-400" id="header-subtitle">Portal Administrativo & Monitoramento</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="hidden md:flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+                    <span class="text-slate-400 font-medium"><i class="fa-solid fa-calendar-days text-indigo-400 mr-1"></i> Mês de Referência Global:</span>
+                    <input type="month" id="global-reference-month" value="2026-10" onchange="updateGlobalReference(this.value)" class="bg-slate-900 text-indigo-400 font-semibold px-2 py-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
+                </div>
+                <button onclick="triggerPDF()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition cursor-pointer">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Exportar PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
+
+        <!-- Navigation Tabs -->
+        <nav class="flex space-x-2 border-b border-slate-200 pb-3 overflow-x-auto no-print">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-sm flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard Executivo</span>
+            </button>
+            <button onclick="switchTab('pendencias')" id="btn-pendencias" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Gestão de Vistorias & Pendências</span>
+            </button>
+            <button onclick="switchTab('financeiro')" id="btn-financeiro" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Prestação de Contas (Por Competência)</span>
+            </button>
+            <button onclick="switchTab('reformas')" id="btn-reformas" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-helmet-safety"></i>
+                <span>Regras de Reformas</span>
+            </button>
+            <button onclick="switchTab('energia')" id="btn-energia" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Energia Elétrica & SAVE</span>
+            </button>
+        </nav>
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="bg-gradient-to-r from-indigo-900 to-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-indigo-500/30 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/30" id="dash-badge-ref">Relatório Executivo Consolidado</span>
+                    <h2 class="text-2xl md:text-3xl font-bold mt-3">Painel de Monitoramento Condominial</h2>
+                    <p class="text-slate-300 text-sm mt-2 leading-relaxed">
+                        Acompanhe em tempo real o andamento das pendências de vistorias (HN Engenharia), o balanço financeiro por competência e os estudos de infraestrutura elétrica.
+                    </p>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total de Pendências</span>
+                        <div class="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-total">379</h3>
+                        <p class="text-xs text-emerald-600 mt-1 font-medium"><i class="fa-solid fa-arrow-down"></i> Monitoramento contínuo</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Itens Resolvidos (OK)</span>
+                        <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-ok">142</h3>
+                        <p class="text-xs text-slate-500 mt-1">Concluídos pela construtora</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pendentes / Em Análise</span>
+                        <div class="bg-amber-50 text-amber-600 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-pendentes">237</h3>
+                        <p class="text-xs text-amber-600 mt-1 font-medium">Aguardando intervenção</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Saldo Líquido (Competência)</span>
+                        <div class="bg-blue-50 text-blue-600 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-2xl font-extrabold text-slate-900" id="kpi-saldo">R$ 127.263,34</h3>
+                        <p class="text-xs text-slate-500 mt-1" id="kpi-competencia-label">Ref. Setembro / 2026</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Summaries Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-column text-indigo-600"></i>
+                            <span>Resumo de Obras & Vistorias (Torre A & B)</span>
+                        </h3>
+                        <button onclick="switchTab('pendencias')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Completo</button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                            <span class="text-sm font-medium text-slate-700">Torre A (Vistoria Out/2024)</span>
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-lg">232 Itens Mapeados</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                            <span class="text-sm font-medium text-slate-700">Torre B & Áreas Comuns (Vistoria Out/2024)</span>
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-lg">147 Itens Mapeados</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>Veículos Elétricos & Energia (SAVE)</span>
+                        </h3>
+                        <button onclick="switchTab('energia')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Estudo</button>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-slate-100 pb-2">
+                            <span class="text-slate-600">Estações Previstas (SAVE):</span>
+                            <span class="font-bold text-slate-900">22 Estações (7,04 kVA cada)</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-2">
+                            <span class="text-slate-600">Carga Total das Estações:</span>
+                            <span class="font-bold text-slate-900">154,88 kVA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Status de Viabilidade:</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Viável com DLM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PENDENCIAS -->
+        <section id="tab-pendencias" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Gestão de Pendências e Vistorias de Obra</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Baseado nos relatórios da HN Engenharia (Torre A, Torre B e Áreas Comuns).</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <input type="text" id="search-input" onkeyup="filterPendencias()" placeholder="Pesquisar item ou local..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
+                    
+                    <select id="filter-status" onchange="filterPendencias()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="ALL">Todos Status</option>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="OK">Resolvido (OK)</option>
+                    </select>
+
+                    <button onclick="openAddItemModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Adicionar Item</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table of Pendencias -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse" id="pendencias-table">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200 font-semibold">
+                                <th class="p-4">Item #</th>
+                                <th class="p-4">Local / Setor</th>
+                                <th class="p-4">Referência</th>
+                                <th class="p-4">Descrição do Problema</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700" id="table-body">
+                            <!-- Dynamic rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PRESTAÇÃO DE CONTAS -->
+        <section id="tab-financeiro" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Prestação de Contas por Mês / Ano (Competência)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Selecione o mês de competência para visualizar, adicionar ou editar as rubricas e saldos.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center space-x-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                        <span class="text-slate-500 font-medium">Competência:</span>
+                        <input type="month" id="finance-month-filter" value="2026-09" onchange="renderAccounts()" class="bg-transparent font-bold text-indigo-600 focus:outline-none cursor-pointer">
+                    </div>
+
+                    <button onclick="openAddAccountModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Adicionar Conta / Rubrica</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accounts Dynamic Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="accounts-grid">
+                <!-- Dynamically populated cards -->
+            </div>
+
+            <!-- Consolidated Box -->
+            <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <span class="bg-emerald-500/20 text-emerald-300 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/30" id="box-competencia-badge">Competência Selecionada</span>
+                    <h3 class="text-2xl font-bold mt-2">Valor Líquido Total em Caixa (Mês)</h3>
+                    <p class="text-slate-300 text-xs mt-1">Soma de contas credoras menos contas devedoras do mês selecionado.</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-4xl md:text-5xl font-black text-emerald-400" id="val-liquido">R$ 0,00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: REFORMAS -->
+        <section id="tab-reformas" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Manual do Condômino</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Procedimentos e Orientações para Reformas (NBR 16280/20)</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600">
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-file-contract text-indigo-600"></i>
+                            <span>1. Documentação Exigida</span>
+                        </h3>
+                        <p class="text-xs leading-relaxed">
+                            Envio prévio para o e-mail de obras: Termo de Responsabilidade, Plano de Reformas (NBR 16280/20), ART/RRT de execução (engenheiro civil ou arquiteto). Para reformas simples dispensadas por norma, assume-se responsabilidade total com envio do termo e plano assinados.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-clock text-indigo-600"></i>
+                            <span>2. Horários Permitidos</span>
+                        </h3>
+                        <p class="text-xs leading-relaxed">
+                            <strong>Segunda a sexta-feira:</strong> Das 08:00h às 17:00h.<br>
+                            <strong>Sábados:</strong> Das 08:00h às 12:00h.<br>
+                            <strong>Domingos e Feriados:</strong> Estritamente proibido.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-heart text-indigo-600"></i>
+                            <span>3. Proteções Obrigatórias</span>
+                        </h3>
+                        <p class="text-xs leading-relaxed">
+                            Cantoneiras nas quinas e arestas das áreas comuns do elevador até a porta da unidade, aplicação de Salva-Piso em todo o trajeto, e telas de proteção/tapumes em intervenções com risco de queda de materiais. Aviso prévio obrigatório à portaria.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+                            <span>4. Proibições Técnicas</span>
+                        </h3>
+                        <p class="text-xs leading-relaxed">
+                            Proibida a troca do disjuntor geral de entrada por amperagem superior. Vedada alteração de fachada, esquadrias ou partes externas (Art. 1.336 CC). Penalidades incluem advertências, multas e paralisação imediata.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: ENERGIA & SAVE -->
+        <section id="tab-energia" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Relatório Técnico nº 226/2026 (CGM Engenharia)</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-1">Estações de Recarga de Veículos Elétricos (SAVE)</h3>
+                    </div>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-lg" id="energia-ref-label">Outubro / 2026</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">Estações Previstas</span>
+                        <span class="text-2xl font-bold text-slate-900 mt-1 block">22 Unidades</span>
+                        <span class="text-[11px] text-slate-400">7,04 kVA cada (Bifásica 32A)</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">Carga Total Adicional</span>
+                        <span class="text-2xl font-bold text-indigo-600 mt-1 block">154,88 kVA</span>
+                        <span class="text-[11px] text-slate-400">Incorporada ao QD-ADM</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">Capacidade Geral Edificação</span>
+                        <span class="text-2xl font-bold text-emerald-600 mt-1 block">480,12 kVA</span>
+                        <span class="text-[11px] text-slate-400">Margem global: 208,14 kVA</span>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <strong>Recomendação Técnica:</strong> O cenário de 22 estações é viável pelo critério de potência aparente, exigindo obrigatoriamente projeto executivo, balanceamento de fases, disjuntores exclusivos com DR específico e Gerenciamento Dinâmico de Carga (DLM) para preservar a reserva técnica de 10% na Administração.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500 no-print">
+        <p>Condomínio Horizon Paraíso — Rua Cubatão, 1061 / 1049 - Vila Mariana, São Paulo - SP</p>
+        <p class="mt-1">Sistema gerencial otimizado para auditoria de vistorias, prestação de contas e engenharia.</p>
+    </footer>
+
+    <!-- MODAL: ADD / EDIT PENDENCIA -->
+    <div id="modal-pendencia" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="modal-title" class="font-bold text-slate-900 text-base">Adicionar Nova Pendência</h3>
+                <button onclick="closeModal('modal-pendencia')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <input type="hidden" id="edit-index" value="-1">
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Local / Setor</label>
+                    <input type="text" id="m-local" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Barrilete laje, Torre A 24º andar">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Referência</label>
+                    <input type="text" id="m-ref" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: BARRILETE, ELEVADOR, PCF">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição do Problema</label>
+                    <textarea id="m-prob" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descreva detalhadamente a ocorrência..."></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Status</label>
+                    <select id="m-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="OK">Resolvido (OK)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <button onclick="closeModal('modal-pendencia')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="savePendencia()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Pendência</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT CONTA / RUBRICA -->
+    <div id="modal-account" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="account-modal-title" class="font-bold text-slate-900 text-base">Adicionar Nova Conta / Rubrica</h3>
+                <button onclick="closeModal('modal-account')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <input type="hidden" id="account-edit-id" value="">
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Mês de Competência</label>
+                    <input type="month" id="acc-competencia" value="2026-09" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nome da Conta / Rubrica</label>
+                    <input type="text" id="acc-name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Conta Corrente Itaú, Fundo de Obras">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Tipo de Saldo</label>
+                    <select id="acc-type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="credor">Credor (Entrada / Saldo Positivo)</option>
+                        <option value="devedor">Devedor (Saída / Passivo / Débito)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Valor (R$)</label>
+                    <input type="text" id="acc-value" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <button onclick="closeModal('modal-account')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="saveAccount()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Conta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initial Mock Data derived from HN Engenharia & Vistorias
+        let pendenciasData = JSON.parse(localStorage.getItem('horizon_pendencias')) || [
+            { id: 1, local: "Barrilete laje", ref: "BARRILETE", prob: "Tampa da caixa d'água com puxador para dentro", status: "OK" },
+            { id: 2, local: "Barrilete laje", ref: "BARRILETE", prob: "Acesso sem suporte de apoio", status: "OK" },
+            { id: 3, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de pintura na parede", status: "OK" },
+            { id: 4, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de calha", status: "OK" },
+            { id: 5, local: "Barrilete laje", ref: "BARRILETE", prob: "Antena coletiva sem aterramento", status: "PENDENTE" },
+            { id: 6, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Sem esquadria", status: "OK" },
+            { id: 7, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Aterramento solto", status: "OK" },
+            { id: 8, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Limpeza do equipamento", status: "OK" },
+            { id: 9, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "PCF não fecha", status: "OK" },
+            { id: 10, local: "Barrilete interno", ref: "BARRILETE", prob: "Porta sem maçaneta e regulagem da esquadria solta e vedação", status: "OK" },
+            { id: 11, local: "Barrilete externo", ref: "BARRILETE", prob: "Verificar teste de estanqueidade geral", status: "PENDENTE" },
+            { id: 12, local: "24º andar A", ref: "PCF", prob: "PCF regulagem", status: "OK" },
+            { id: 13, local: "24º andar", ref: "SHAFT HIDRÁULICA", prob: "Possível vazamento final 2", status: "OK" },
+            { id: 14, local: "24º andar", ref: "ÁREA DE RESGATE", prob: "Revisão na pintura", status: "PENDENTE" },
+            { id: 15, local: "Salão de festa", ref: "COZINHA", prob: "Cooktop não está ligado", status: "PENDENTE" },
+            { id: 16, local: "Fitness", ref: "ACADEMIA", prob: "Borracha solta em frente a primeira esteira", status: "PENDENTE" },
+            { id: 17, local: "Brinquedoteca", ref: "BRINQUEDOTECA", prob: "Janela com os vidros riscados", status: "PENDENTE" },
+            { id: 18, local: "Coworking", ref: "COWORKING", prob: "Trinca na parede", status: "PENDENTE" },
+            { id: 19, local: "Piscina adulto", ref: "PISCINA", prob: "Falta rejunte", status: "PENDENTE" },
+            { id: 20, local: "Térreo", ref: "PORTARIA", prob: "Porta blindada não fecha", status: "OK" }
+        ];
+
+        let accountsData = JSON.parse(localStorage.getItem('horizon_accounts')) || [
+            { id: 'acc_1', competencia: '2026-09', name: "Conta Ordinária", type: "credor", value: 11928.56, icon: "fa-piggy-bank" },
+            { id: 'acc_2', competencia: '2026-09', name: "Fundo de Reserva", type: "credor", value: 107882.17, icon: "fa-shield-halved" },
+            { id: 'acc_3', competencia: '2026-09', name: "Benfeitorias", type: "credor", value: 9591.62, icon: "fa-hammer" },
+            { id: 'acc_4', competencia: '2026-09', name: "I.P.T.U.", type: "devedor", value: 2139.01, icon: "fa-file-invoice-dollar" },
+            { id: 'acc_5', competencia: '2026-10', name: "Conta Ordinária", type: "credor", value: 15400.00, icon: "fa-piggy-bank" },
+            { id: 'acc_6', competencia: '2026-10', name: "Fundo de Reserva", type: "credor", value: 109500.00, icon: "fa-shield-halved" },
+            { id: 'acc_7', competencia: '2026-10', name: "Benfeitorias", type: "credor", value: 9591.62, icon: "fa-hammer" },
+            { id: 'acc_8', competencia: '2026-10', name: "I.P.T.U.", type: "devedor", value: 1850.00, icon: "fa-file-invoice-dollar" }
+        ];
+
+        let globalRefMonth = localStorage.getItem('horizon_global_ref') || '2026-10';
+
+        function updateGlobalReference(val) {
+            globalRefMonth = val;
+            localStorage.setItem('horizon_global_ref', val);
+            
+            const formatted = formatMonthYear(val);
+            document.getElementById('header-subtitle').innerText = `Portal Administrativo & Monitoramento — Ref: ${formatted}`;
+            document.getElementById('dash-badge-ref').innerText = `Relatório Executivo Consolidado — ${formatted}`;
+            document.getElementById('energia-ref-label').innerText = formatted;
+            
+            // Also sync finance filter to match global reference if convenient
+            document.getElementById('finance-month-filter').value = val;
+            renderAccounts();
+            
+            showToast(`Mês de Referência Global atualizado para ${formatted}`);
+        }
+
+        function formatMonthYear(ymString) {
+            if(!ymString) return '';
+            const [year, month] = ymString.split('-');
+            const months = {
+                '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril',
+                '05': 'Maio', '06': 'Junho', '07': 'Julho', '08': 'Agosto',
+                '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
+            };
+            return `${months[month] || month} / ${year}`;
+        }
+
+        // UI Tabs Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer";
+            });
+            document.getElementById(`btn-${tabId}`).className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-sm flex items-center space-x-2 cursor-pointer";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Pendencias Table
+        function renderTable(dataToRender = pendenciasData) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            dataToRender.forEach((item) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="p-4 font-mono font-semibold text-slate-500">#${item.id}</td>
+                    <td class="p-4 font-medium text-slate-900">${item.local}</td>
+                    <td class="p-4"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono text-[11px]">${item.ref}</span></td>
+                    <td class="p-4 text-slate-600 max-w-xs truncate">${item.prob}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${item.status === 'OK' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="toggleStatus(${item.id})" title="Alternar Status" class="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="editPendencia(${item.id})" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deletePendencia(${item.id})" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Update KPIs
+            document.getElementById('kpi-total').innerText = pendenciasData.length;
+            document.getElementById('kpi-ok').innerText = pendenciasData.filter(i => i.status === 'OK').length;
+            document.getElementById('kpi-pendentes').innerText = pendenciasData.filter(i => i.status === 'PENDENTE').length;
+
+            localStorage.setItem('horizon_pendencias', JSON.stringify(pendenciasData));
+        }
+
+        // Render Finance Accounts based on selected Competência
+        function renderAccounts() {
+            const selectedMonth = document.getElementById('finance-month-filter').value;
+            const grid = document.getElementById('accounts-grid');
+            grid.innerHTML = '';
+
+            const filteredAccounts = accountsData.filter(acc => acc.competencia === selectedMonth);
+
+            let totalCredor = 0;
+            let totalDevedor = 0;
+
+            filteredAccounts.forEach(acc => {
+                if(acc.type === 'credor') totalCredor += acc.value;
+                else totalDevedor += acc.value;
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="absolute top-0 right-0 p-4 text-slate-300 text-3xl"><i class="fa-solid ${acc.icon || 'fa-wallet'}"></i></div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">${acc.name}</span>
+                        <h3 class="text-2xl font-extrabold ${acc.type === 'credor' ? 'text-emerald-600' : 'text-rose-600'} mt-3">
+                            R$ ${acc.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1 font-medium">${acc.type === 'credor' ? 'Saldo Credor' : 'Saldo Devedor / Passivo'}</p>
+                    </div>
+                    <div class="flex justify-end space-x-2 mt-4 pt-3 border-t border-slate-100">
+                        <button onclick="editAccount('${acc.id}')" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded bg-indigo-50 cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
+                        <button onclick="deleteAccount('${acc.id}')" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded bg-rose-50 cursor-pointer"><i class="fa-solid fa-trash"></i> Excluir</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            if(filteredAccounts.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center text-slate-500 text-xs">
+                        <i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-400"></i>
+                        <p>Nenhuma conta cadastrada para esta competência (${formatMonthYear(selectedMonth)}). Clique em "Adicionar Conta / Rubrica" para começar.</p>
+                    </div>
+                `;
+            }
+
+            const liquido = totalCredor - totalDevedor;
+            document.getElementById('val-liquido').innerText = `R$ ${liquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-saldo').innerText = `R$ ${liquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            
+            const monthText = formatMonthYear(selectedMonth);
+            document.getElementById('kpi-competencia-label').innerText = `Ref. ${monthText}`;
+            document.getElementById('box-competencia-badge').innerText = `Competência: ${monthText}`;
+
+            localStorage.setItem('horizon_accounts', JSON.stringify(accountsData));
+        }
+
+        // Account Modal Management
+        function openAddAccountModal() {
+            document.getElementById('account-modal-title').innerText = "Adicionar Nova Conta / Rubrica";
+            document.getElementById('account-edit-id').value = "";
+            document.getElementById('acc-competencia').value = document.getElementById('finance-month-filter').value;
+            document.getElementById('acc-name').value = "";
+            document.getElementById('acc-type').value = "credor";
+            document.getElementById('acc-value').value = "";
+            document.getElementById('modal-account').classList.remove('hidden');
+        }
+
+        function editAccount(id) {
+            const acc = accountsData.find(a => a.id === id);
+            if(acc) {
+                document.getElementById('account-modal-title').innerText = `Editar Conta: ${acc.name}`;
+                document.getElementById('account-edit-id').value = acc.id;
+                document.getElementById('acc-competencia').value = acc.competencia;
+                document.getElementById('acc-name').value = acc.name;
+                document.getElementById('acc-type').value = acc.type;
+                document.getElementById('acc-value').value = acc.value.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('modal-account').classList.remove('hidden');
+            }
+        }
+
+        function saveAccount() {
+            const editId = document.getElementById('account-edit-id').value;
+            const competencia = document.getElementById('acc-competencia').value;
+            const name = document.getElementById('acc-name').value.trim();
+            const type = document.getElementById('acc-type').value;
+            const value = parseMoney(document.getElementById('acc-value').value);
+            const icon = type === 'credor' ? 'fa-piggy-bank' : 'fa-file-invoice-dollar';
+
+            if(!name) {
+                alert("Preencha o nome da conta.");
+                return;
+            }
+
+            if(!editId) {
+                const newId = 'acc_' + Date.now();
+                accountsData.push({ id: newId, competencia, name, type, value, icon });
+                showToast("Nova conta adicionada com sucesso!");
+            } else {
+                const acc = accountsData.find(a => a.id === editId);
+                if(acc) {
+                    acc.competencia = competencia;
+                    acc.name = name;
+                    acc.type = type;
+                    acc.value = value;
+                    acc.icon = icon;
+                    showToast("Conta atualizada com sucesso!");
+                }
+            }
+
+            closeModal('modal-account');
+            document.getElementById('finance-month-filter').value = competencia;
+            renderAccounts();
+        }
+
+        function deleteAccount(id) {
+            if(confirm("Deseja realmente remover esta conta da prestação de contas?")) {
+                accountsData = accountsData.filter(a => a.id !== id);
+                renderAccounts();
+                showToast("Conta removida com sucesso!", "error");
+            }
+        }
+
+        // Filter Functionality for Pendencias
+        function filterPendencias() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+
+            const filtered = pendenciasData.filter(item => {
+                const matchQuery = item.local.toLowerCase().includes(query) || item.prob.toLowerCase().includes(query) || item.ref.toLowerCase().includes(query);
+                const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
+                return matchQuery && matchStatus;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Toggle Status Quickly
+        function toggleStatus(id) {
+            const item = pendenciasData.find(i => i.id === id);
+            if(item) {
+                item.status = item.status === 'OK' ? 'PENDENTE' : 'OK';
+                renderTable();
+                showToast(`Status do item #${id} atualizado para ${item.status}`);
+            }
+        }
+
+        // Delete Item
+        function deletePendencia(id) {
+            if(confirm("Deseja realmente excluir este registro?")) {
+                pendenciasData = pendenciasData.filter(i => i.id !== id);
+                renderTable();
+                showToast("Item excluído com sucesso!", "error");
+            }
+        }
+
+        // Modal Controls
+        function openAddItemModal() {
+            document.getElementById('modal-title').innerText = "Adicionar Nova Pendência";
+            document.getElementById('edit-index').value = "-1";
+            document.getElementById('m-local').value = "";
+            document.getElementById('m-ref').value = "";
+            document.getElementById('m-prob').value = "";
+            document.getElementById('m-status').value = "PENDENTE";
+            document.getElementById('modal-pendencia').classList.remove('hidden');
+        }
+
+        function editPendencia(id) {
+            const item = pendenciasData.find(i => i.id === id);
+            if(item) {
+                document.getElementById('modal-title').innerText = `Editar Pendência #${id}`;
+                document.getElementById('edit-index').value = id;
+                document.getElementById('m-local').value = item.local;
+                document.getElementById('m-ref').value = item.ref;
+                document.getElementById('m-prob').value = item.prob;
+                document.getElementById('m-status').value = item.status;
+                document.getElementById('modal-pendencia').classList.remove('hidden');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function savePendencia() {
+            const id = parseInt(document.getElementById('edit-index').value);
+            const local = document.getElementById('m-local').value.trim();
+            const ref = document.getElementById('m-ref').value.trim() || "GERAL";
+            const prob = document.getElementById('m-prob').value.trim();
+            const status = document.getElementById('m-status').value;
+
+            if(!local || !prob) {
+                alert("Preencha o local e a descrição do problema.");
+                return;
+            }
+
+            if(id === -1) {
+                const newId = pendenciasData.length > 0 ? Math.max(...pendenciasData.map(i => i.id)) + 1 : 1;
+                pendenciasData.unshift({ id: newId, local, ref, prob, status });
+                showToast("Nova pendência adicionada com sucesso!");
+            } else {
+                const item = pendenciasData.find(i => i.id === id);
+                if(item) {
+                    item.local = local;
+                    item.ref = ref;
+                    item.prob = prob;
+                    item.status = status;
+                    showToast(`Pendência #${id} atualizada com sucesso!`);
+                }
+            }
+
+            closeModal('modal-pendencia');
+            renderTable();
+        }
+
+        function parseMoney(str) {
+            if(!str) return 0;
+            return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+        }
+
+        // Toast Feedback Notification
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.innerText = msg;
+            if(type === 'error') {
+                iconEl.className = "fa-solid fa-circle-exclamation text-rose-400";
+            } else {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-400";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // PDF Export Handler using window.print()
+        function triggerPDF() {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('hidden'));
+            window.print();
+            setTimeout(() => {
+                switchTab('dashboard');
+            }, 500);
+        }
+
+        // Initialize App on Load
+        window.onload = function() {
+            document.getElementById('global-reference-month').value = globalRefMonth;
+            updateGlobalReference(globalRefMonth);
+            renderTable();
+            renderAccounts();
+        };
+    </script>
+
+</body>
+</html>
