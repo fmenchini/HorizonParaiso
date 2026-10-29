@@ -379,7 +379,7 @@
                         <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
                     </select>
 
-                    <button onclick="secureAction(openAddSugestaoModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                    <button onclick="openAddSugestaoModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i>
                         <span>Nova Sugestão / Benfeitoria</span>
                     </button>
@@ -1179,8 +1179,8 @@
                             <span class="${prioColor}">${item.prioridade}</span>
                         </div>
                         <div class="space-x-1">
-                            <button onclick="secureAction(() => editSugestao(${item.id}))" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="secureAction(() => deleteSugestao(${item.id}))" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
+                            <button onclick="editSugestao(${item.id})" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteSugestao(${item.id})" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
                         </div>
                     </div>
                 `;
