@@ -76,6 +76,10 @@
                     <span class="text-slate-400 font-medium"><i class="fa-solid fa-calendar-days text-indigo-400 mr-1"></i> Mês de Referência Global:</span>
                     <input type="month" id="global-reference-month" value="2026-10" onchange="updateGlobalReference(this.value)" class="bg-slate-900 text-indigo-400 font-semibold px-2 py-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
                 </div>
+                <button onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700 flex items-center space-x-1.5 transition cursor-pointer" title="Configurações e Senha">
+                    <i class="fa-solid fa-key"></i>
+                    <span class="hidden sm:inline">Senha</span>
+                </button>
                 <button onclick="triggerPDF()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition cursor-pointer">
                     <i class="fa-solid fa-file-pdf"></i>
                     <span>Exportar PDF</span>
@@ -493,7 +497,7 @@
             </div>
             <div>
                 <h3 class="font-bold text-slate-900 text-lg">Acesso Restrito</h3>
-                <p class="text-xs text-slate-500 mt-1">Insira a senha de 4 dígitos para autorizar alterações (Padrão: <span class="font-mono font-bold text-indigo-600">1234</span>).</p>
+                <p class="text-xs text-slate-500 mt-1">Insira a senha de 4 dígitos para autorizar alterações.</p>
             </div>
             <div>
                 <input type="password" id="pin-input" maxlength="4" class="w-36 text-center tracking-widest text-2xl px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
@@ -501,6 +505,37 @@
             <div class="flex justify-center space-x-3 pt-2">
                 <button onclick="closeModal('modal-pin')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
                 <button onclick="verifyPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SETTINGS / CHANGE PIN -->
+    <div id="modal-settings" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200 text-left">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-900 text-base flex items-center space-x-2">
+                    <i class="fa-solid fa-key text-indigo-600"></i>
+                    <span>Alterar Senha de Acesso</span>
+                </h3>
+                <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Senha Atual (4 dígitos)</label>
+                    <input type="password" id="set-current-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nova Senha (4 dígitos)</label>
+                    <input type="password" id="set-new-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Confirmar Nova Senha</label>
+                    <input type="password" id="set-confirm-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <button onclick="closeModal('modal-settings')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="saveNewPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Atualizar Senha</button>
             </div>
         </div>
     </div>
@@ -713,6 +748,10 @@
         // PIN Security mechanism
         let pendingAction = null;
 
+        function getStoredPin() {
+            return localStorage.getItem('horizon_pin') || '1234';
+        }
+
         function secureAction(callback) {
             pendingAction = callback;
             document.getElementById('pin-input').value = "";
@@ -722,7 +761,8 @@
 
         function verifyPin() {
             const pin = document.getElementById('pin-input').value;
-            if(pin === '6516') {
+            const correctPin = getStoredPin();
+            if(pin === correctPin) {
                 closeModal('modal-pin');
                 showToast("Acesso autorizado!");
                 if(pendingAction) {
@@ -730,10 +770,41 @@
                     pendingAction = null;
                 }
             } else {
-                showToast("Senha incorreta! tente novamente.", "error");
+                showToast("Senha incorreta!", "error");
                 document.getElementById('pin-input').value = "";
                 document.getElementById('pin-input').focus();
             }
+        }
+
+        function openSettingsModal() {
+            document.getElementById('set-current-pin').value = '';
+            document.getElementById('set-new-pin').value = '';
+            document.getElementById('set-confirm-pin').value = '';
+            document.getElementById('modal-settings').classList.remove('hidden');
+        }
+
+        function saveNewPin() {
+            const current = document.getElementById('set-current-pin').value;
+            const newPin = document.getElementById('set-new-pin').value;
+            const confirmPin = document.getElementById('set-confirm-pin').value;
+            const correctPin = getStoredPin();
+
+            if(current !== correctPin) {
+                showToast("Senha atual incorreta!", "error");
+                return;
+            }
+            if(!newPin || newPin.length !== 4 || isNaN(newPin)) {
+                showToast("A nova senha deve ter exatamente 4 números.", "error");
+                return;
+            }
+            if(newPin !== confirmPin) {
+                showToast("A confirmação da nova senha não confere.", "error");
+                return;
+            }
+
+            localStorage.setItem('horizon_pin', newPin);
+            closeModal('modal-settings');
+            showToast("Senha alterada com sucesso!");
         }
 
         // Initial Plano de Ação Data from PDF
