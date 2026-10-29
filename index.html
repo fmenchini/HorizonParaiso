@@ -93,6 +93,10 @@
                 <i class="fa-solid fa-chart-pie"></i>
                 <span>Dashboard Executivo</span>
             </button>
+            <button onclick="switchTab('plano')" id="btn-plano" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Plano de Ação</span>
+            </button>
             <button onclick="switchTab('pendencias')" id="btn-pendencias" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
                 <i class="fa-solid fa-list-check"></i>
                 <span>Gestão de Vistorias & Pendências</span>
@@ -123,7 +127,7 @@
                     <span class="bg-indigo-500/30 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/30" id="dash-badge-ref">Relatório Executivo Consolidado</span>
                     <h2 class="text-2xl md:text-3xl font-bold mt-3">Painel de Monitoramento Condominial</h2>
                     <p class="text-slate-300 text-sm mt-2 leading-relaxed">
-                        Acompanhe em tempo real o andamento das pendências de vistorias (HN Engenharia), o balanço financeiro por competência e os estudos de infraestrutura elétrica.
+                        Acompanhe em tempo real o Plano de Ação oficial, o andamento das pendências de vistorias, o balanço financeiro por competência e os estudos de infraestrutura elétrica.
                     </p>
                 </div>
             </div>
@@ -132,46 +136,46 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total de Pendências</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ações no Plano</span>
                         <div class="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-solid fa-clipboard-list"></i>
                         </div>
                     </div>
                     <div class="mt-4">
-                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-total">379</h3>
-                        <p class="text-xs text-emerald-600 mt-1 font-medium"><i class="fa-solid fa-arrow-down"></i> Monitoramento contínuo</p>
+                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-plano-total">27</h3>
+                        <p class="text-xs text-indigo-600 mt-1 font-medium">Plano de Ação Oficial</p>
                     </div>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Itens Resolvidos (OK)</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total de Vistorias</span>
+                        <div class="bg-amber-50 text-amber-600 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-total">379</h3>
+                        <p class="text-xs text-slate-500 mt-1 font-medium">Torre A & B</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Vistorias Resolvidas (OK)</span>
                         <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
                     </div>
                     <div class="mt-4">
                         <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-ok">142</h3>
-                        <p class="text-xs text-slate-500 mt-1">Concluídos pela construtora</p>
+                        <p class="text-xs text-emerald-600 mt-1 font-medium">Concluídos pela construtora</p>
                     </div>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pendentes / Em Análise</span>
-                        <div class="bg-amber-50 text-amber-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-pendentes">237</h3>
-                        <p class="text-xs text-amber-600 mt-1 font-medium">Aguardando intervenção</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Saldo Líquido (Competência)</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Saldo Líquido (Caixa)</span>
                         <div class="bg-blue-50 text-blue-600 p-2.5 rounded-xl">
                             <i class="fa-solid fa-vault"></i>
                         </div>
@@ -188,20 +192,13 @@
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-chart-column text-indigo-600"></i>
-                            <span>Resumo de Obras & Vistorias (Torre A & B)</span>
+                            <i class="fa-solid fa-clipboard-check text-indigo-600"></i>
+                            <span>Destaques do Plano de Ação</span>
                         </h3>
-                        <button onclick="switchTab('pendencias')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Completo</button>
+                        <button onclick="switchTab('plano')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Completo</button>
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
-                            <span class="text-sm font-medium text-slate-700">Torre A (Vistoria Out/2024)</span>
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-lg">232 Itens Mapeados</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
-                            <span class="text-sm font-medium text-slate-700">Torre B & Áreas Comuns (Vistoria Out/2024)</span>
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-lg">147 Itens Mapeados</span>
-                        </div>
+                    <div class="space-y-3 text-sm" id="dashboard-plano-highlights">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
 
@@ -231,7 +228,55 @@
             </div>
         </section>
 
-        <!-- TAB 2: PENDENCIAS -->
+        <!-- TAB 2: PLANO DE AÇÃO -->
+        <section id="tab-plano" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Plano de Ação - Horizon Paraíso (Residencial)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Ações, responsáveis, prazos e comentários evolutivos extraídos do documento oficial do condomínio.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <input type="text" id="search-plano" onkeyup="filterPlano()" placeholder="Pesquisar ação ou responsável..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
+                    
+                    <select id="filter-plano-status" onchange="filterPlano()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="ALL">Todos Status</option>
+                        <option value="Concluida">Concluída</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Não Iniciada">Não Iniciada</option>
+                    </select>
+
+                    <button onclick="secureAction(openAddPlanoModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Nova Ação</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table of Plano de Ação -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse" id="plano-table">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200 font-semibold">
+                                <th class="p-4">Ação / Descrição</th>
+                                <th class="p-4">Prioridade</th>
+                                <th class="p-4">Responsável</th>
+                                <th class="p-4">Início</th>
+                                <th class="p-4">Término</th>
+                                <th class="p-4">Comentário Evolutivo</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700" id="plano-table-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PENDENCIAS DE VISTORIA -->
         <section id="tab-pendencias" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -247,7 +292,7 @@
                         <option value="OK">Resolvido (OK)</option>
                     </select>
 
-                    <button onclick="openAddItemModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                    <button onclick="secureAction(openAddItemModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i>
                         <span>Adicionar Item</span>
                     </button>
@@ -276,7 +321,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: PRESTAÇÃO DE CONTAS -->
+        <!-- TAB 4: PRESTAÇÃO DE CONTAS -->
         <section id="tab-financeiro" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -289,7 +334,7 @@
                         <input type="month" id="finance-month-filter" value="2026-09" onchange="renderAccounts()" class="bg-transparent font-bold text-indigo-600 focus:outline-none cursor-pointer">
                     </div>
 
-                    <button onclick="openAddAccountModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer">
+                    <button onclick="secureAction(openAddAccountModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer">
                         <i class="fa-solid fa-plus"></i>
                         <span>Adicionar Conta / Rubrica</span>
                     </button>
@@ -314,7 +359,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: SUGESTÕES & BENFEITORIAS -->
+        <!-- TAB 5: SUGESTÕES & BENFEITORIAS -->
         <section id="tab-sugestoes" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -330,7 +375,7 @@
                         <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
                     </select>
 
-                    <button onclick="openAddSugestaoModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                    <button onclick="secureAction(openAddSugestaoModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i>
                         <span>Nova Sugestão / Benfeitoria</span>
                     </button>
@@ -343,7 +388,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: REFORMAS -->
+        <!-- TAB 6: REFORMAS -->
         <section id="tab-reformas" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
@@ -397,7 +442,7 @@
             </div>
         </section>
 
-        <!-- TAB 6: ENERGIA & SAVE -->
+        <!-- TAB 7: ENERGIA & SAVE -->
         <section id="tab-energia" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4 flex justify-between items-center">
@@ -437,8 +482,89 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500 no-print">
         <p>Condomínio Horizon Paraíso — Rua Cubatão, 1061 / 1049 - Vila Mariana, São Paulo - SP</p>
-        <p class="mt-1">Sistema gerencial otimizado para auditoria de vistorias, prestação de contas e engenharia.</p>
+        <p class="mt-1">Sistema gerencial otimizado para auditoria de vistorias, prestação de contas, plano de ação e engenharia.</p>
     </footer>
+
+    <!-- MODAL: PIN SECURITY (4 DIGITS) -->
+    <div id="modal-pin" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200 text-center">
+            <div class="bg-indigo-50 text-indigo-600 w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-xl shadow-inner">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-900 text-lg">Acesso Restrito</h3>
+                <p class="text-xs text-slate-500 mt-1">Insira a senha de 4 dígitos para autorizar alterações (Padrão: <span class="font-mono font-bold text-indigo-600">1234</span>).</p>
+            </div>
+            <div>
+                <input type="password" id="pin-input" maxlength="4" class="w-36 text-center tracking-widest text-2xl px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
+            </div>
+            <div class="flex justify-center space-x-3 pt-2">
+                <button onclick="closeModal('modal-pin')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="verifyPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT PLANO DE AÇÃO -->
+    <div id="modal-plano" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="plano-modal-title" class="font-bold text-slate-900 text-base">Nova Ação do Plano</h3>
+                <button onclick="closeModal('modal-plano')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <input type="hidden" id="plano-edit-id" value="">
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Ação / Descrição</label>
+                    <textarea id="p-acao" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descreva a ação..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
+                        <select id="p-prio" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="A">Alta (A)</option>
+                            <option value="M">Média (M)</option>
+                            <option value="B">Baixa (B)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Responsável</label>
+                        <input type="text" id="p-resp" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Síndico, Trisul, Comissão">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Início</label>
+                        <input type="text" id="p-inicio" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Término</label>
+                        <input type="text" id="p-termino" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Comentário Evolutivo</label>
+                    <textarea id="p-comentario" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Detalhes da execução..."></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Status de Execução</label>
+                    <select id="p-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="Concluida">Concluída</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Não Iniciada">Não Iniciada</option>
+                        <option value="Atrasada">Atrasada</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <button onclick="closeModal('modal-plano')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="savePlano()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Ação</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL: ADD / EDIT PENDENCIA -->
     <div id="modal-pendencia" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
@@ -584,7 +710,63 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Initial Mock Data derived from HN Engenharia & Vistorias
+        // PIN Security mechanism
+        let pendingAction = null;
+
+        function secureAction(callback) {
+            pendingAction = callback;
+            document.getElementById('pin-input').value = "";
+            document.getElementById('modal-pin').classList.remove('hidden');
+            setTimeout(() => document.getElementById('pin-input').focus(), 100);
+        }
+
+        function verifyPin() {
+            const pin = document.getElementById('pin-input').value;
+            if(pin === '1234') {
+                closeModal('modal-pin');
+                showToast("Acesso autorizado!");
+                if(pendingAction) {
+                    pendingAction();
+                    pendingAction = null;
+                }
+            } else {
+                showToast("Senha incorreta! Use 1234.", "error");
+                document.getElementById('pin-input').value = "";
+                document.getElementById('pin-input').focus();
+            }
+        }
+
+        // Initial Plano de Ação Data from PDF
+        let planoData = JSON.parse(localStorage.getItem('horizon_plano')) || [
+            { id: 1, acao: "Status e progressão do laudo dos elevadores", prio: "M", resp: "Síndico", inicio: "01/04/2025", termino: "25/06/2025", comentario: "Aguardando relatório do status das etapas executadas - Concluído em 25/06/2025", status: "Concluida" },
+            { id: 2, acao: "Avaliação Instalações Elétricas e de quadros", prio: "M", resp: "Síndico", inicio: "15/05/2025", termino: "30/07/2025", comentario: "Foi feito reparo no quadro de bombas no dia 23/07/2025", status: "Concluida" },
+            { id: 3, acao: "Substituição do Prestador do Serviço de Jardinagem", prio: "M", resp: "Síndico", inicio: "01/06/2025", termino: "01/07/2025", comentario: "Contratada a empresa Alexandre Jardinagem após avaliar propostas.", status: "Concluida" },
+            { id: 4, acao: "Revisão dos contratos com prestadores de serviços", prio: "A", resp: "Síndico", inicio: "20/03/2025", termino: "01/05/2025", comentario: "Revisados todos os contratos", status: "Concluida" },
+            { id: 5, acao: "Reposição de Piso tátil e substituição de tapetes antigos", prio: "A", resp: "Síndico", inicio: "15/06/2025", termino: "30/06/2025", comentario: "Tapetes novos colocados nas entradas sociais, de serviço e piscina.", status: "Concluida" },
+            { id: 6, acao: "Implantação de Checklists de higienização de sanitários e áreas comuns", prio: "M", resp: "Síndico", inicio: "16/06/2025", termino: "17/06/2025", comentario: "Treinamento e orientação do zelador e equipe de limpeza.", status: "Concluida" },
+            { id: 7, acao: "Implantação de POPs e verificação diária de consumo (água, luz, gás)", prio: "M", resp: "Síndico", inicio: "16/06/2025", termino: "20/06/2025", comentario: "Treinamento permanente com porteiros e zelador.", status: "Concluida" },
+            { id: 8, acao: "Aquisição de lixeiras para salas de resíduos dos andares (orgânico/reciclável)", prio: "M", resp: "Síndico", inicio: "10/05/2025", termino: "20/05/2025", comentario: "Lixeiras identificadas colocadas em todos os andares.", status: "Concluida" },
+            { id: 9, acao: "Recuperação dos jardins externos e internos", prio: "M", resp: "Síndico", inicio: "01/06/2025", termino: "30/07/2026", comentario: "Substituição de plantas, compra de adubos e terra.", status: "Concluida" },
+            { id: 10, acao: "Infiltração da piscina / pisos da garagem (Defeito de Obra)", prio: "A", resp: "Trisul / Sinco", inicio: "01/03/2025", termino: "30/04/2025", comentario: "Chamados abertos na Trisul / Sinco.", status: "Concluida" },
+            { id: 11, acao: "Alagamentos de recepção e garagem nas chuvas fortes", prio: "A", resp: "Trisul / Sinco", inicio: "15/03/2025", termino: "13/10/2025", comentario: "Trisul apresentou projeto para resolução. Monitorando.", status: "Em Andamento" },
+            { id: 12, acao: "Diversas falhas estruturais (infiltrações, rachaduras, vazamentos)", prio: "A", resp: "Trisul / Sinco", inicio: "25/07/2025", termino: "-", comentario: "Realizado laudo por parte do condomínio. Acompanhando junto à Sinco.", status: "Em Andamento" },
+            { id: 13, acao: "Envio de Notificação Extrajudicial para Trisul e Sinco", prio: "A", resp: "Síndico", inicio: "04/08/2025", termino: "05/08/2025", comentario: "Notificação Extrajudicial enviada em 05/08/2025", status: "Concluida" },
+            { id: 14, acao: "Higienização das Caixas d'água e dedetização", prio: "A", resp: "Síndico", inicio: "07/05/2025", termino: "10/05/2025", comentario: "Higienização realizada pela desentupidora Jardim Sul (cortesia).", status: "Concluida" },
+            { id: 15, acao: "Contratar manutenção da Piscina", prio: "B", resp: "Síndico", inicio: "08/05/2025", termino: "15/05/2025", comentario: "Limpeza passou a ser atribuição do zelador (redução de custos).", status: "Concluida" },
+            { id: 16, acao: "Liberação do uso da exaustão nas churrasqueiras", prio: "A", resp: "Síndico", inicio: "28/07/2025", termino: "13/10/2026", comentario: "Sinco constatou bloqueio no duto; problema solucionado após intervenção.", status: "Concluida" },
+            { id: 17, acao: "Nível de ruído externo (ar do hospital) para finais 2 e 3", prio: "B", resp: "Síndico", inicio: "14/05/2025", termino: "-", comentario: "Hospital em levantamento técnico para solução.", status: "Em Andamento" },
+            { id: 18, acao: "Local para recepção de encomendas e entregas (Ex: iFood)", prio: "M", resp: "Síndico", inicio: "30/07/2025", termino: "28/08/2026", comentario: "Apresentado e aprovado em Assembleia.", status: "Concluida" },
+            { id: 19, acao: "Instalação de câmeras Fase 2 e automação de portões", prio: "A", resp: "Síndico", inicio: "09/06/2025", termino: "30/09/2025", comentario: "Instalação de câmeras iniciada em 14/07/2025.", status: "Concluida" },
+            { id: 20, acao: "Troca de posição do portão interno de veículos do 1º SS", prio: "M", resp: "Síndico", inicio: "09/06/2025", termino: "18/07/2025", comentario: "Iniciado após aprovação em Assembleia.", status: "Concluida" },
+            { id: 21, acao: "Fragilidades no Controle de acesso (FortServ)", prio: "A", resp: "Síndico", inicio: "22/05/2025", termino: "06/06/2025", comentario: "Reunião realizada com fornecedor sinalizando baixa qualidade.", status: "Concluida" },
+            { id: 22, acao: "Definição de Regulamento Interno para áreas comuns", prio: "M", resp: "Comissão", inicio: "14/07/2025", termino: "28/02/2026", comentario: "Regimento interno provisório em vigência para posterior definitivo.", status: "Em Andamento" },
+            { id: 23, acao: "Oxxo perfurações nas lajes de garagem sem autorização", prio: "A", resp: "Síndico", inicio: "01/03/2025", termino: "-", comentario: "Oxxo assumiu responsabilidade pela correção. Aguardando reparos.", status: "Em Andamento" },
+            { id: 24, acao: "AVCB vence em 30/04/2025", prio: "A", resp: "Síndico", inicio: "30/05/2025", termino: "30/08/2025", comentario: "Aguardando visita dos bombeiros para emissão.", status: "Concluida" },
+            { id: 25, acao: "Instalação de tela nos elevadores", prio: "B", resp: "Síndico", inicio: "01/07/2026", termino: "-", comentario: "Aguardando instalação.", status: "Em Andamento" },
+            { id: 26, acao: "Intervenção Sinco (entrada de água sala transformador)", prio: "A", resp: "Síndico", inicio: "14/10/2026", termino: "-", comentario: "Aguardando plano de ação da Sinco.", status: "Em Andamento" },
+            { id: 27, acao: "Instalação de carregadores veiculares (SAVE)", prio: "M", resp: "Síndico", inicio: "10/06/2026", termino: "-", comentario: "Aguardando assembleia para aprovação e escolha da empresa.", status: "Em Andamento" }
+        ];
+
         let pendenciasData = JSON.parse(localStorage.getItem('horizon_pendencias')) || [
             { id: 1, local: "Barrilete laje", ref: "BARRILETE", prob: "Tampa da caixa d'água com puxador para dentro", status: "OK" },
             { id: 2, local: "Barrilete laje", ref: "BARRILETE", prob: "Acesso sem suporte de apoio", status: "OK" },
@@ -636,6 +818,7 @@
             document.getElementById('finance-month-filter').value = val;
             renderAccounts();
             renderSugestoes();
+            renderPlano();
             
             showToast(`Mês de Referência Global atualizado para ${formatted}`);
         }
@@ -663,6 +846,140 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Render Plano de Ação Table
+        function renderPlano(dataToRender = planoData) {
+            const tbody = document.getElementById('plano-table-body');
+            tbody.innerHTML = '';
+
+            dataToRender.forEach((item) => {
+                let statusBadge = 'bg-slate-100 text-slate-700';
+                if(item.status === 'Concluida') statusBadge = 'bg-emerald-100 text-emerald-800';
+                else if(item.status === 'Em Andamento') statusBadge = 'bg-indigo-100 text-indigo-800';
+                else if(item.status === 'Atrasada') statusBadge = 'bg-rose-100 text-rose-800';
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="p-4 font-medium text-slate-900">${item.acao}</td>
+                    <td class="p-4 font-mono font-bold text-center">${item.prio}</td>
+                    <td class="p-4 text-slate-600">${item.resp}</td>
+                    <td class="p-4 text-slate-500 whitespace-nowrap">${item.inicio || '-'}</td>
+                    <td class="p-4 text-slate-500 whitespace-nowrap">${item.termino || '-'}</td>
+                    <td class="p-4 text-slate-600 max-w-xs">${item.comentario || '-'}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${statusBadge}">${item.status}</span></td>
+                    <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                        <button onclick="secureAction(() => editPlano(${item.id}))" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="secureAction(() => deletePlano(${item.id}))" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('kpi-plano-total').innerText = planoData.length;
+
+            // Dashboard highlights (latest 3)
+            const highlightsContainer = document.getElementById('dashboard-plano-highlights');
+            highlightsContainer.innerHTML = '';
+            planoData.slice(0, 3).forEach(p => {
+                highlightsContainer.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                        <span class="text-xs font-medium text-slate-700 truncate max-w-[240px]">${p.acao}</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg ${p.status === 'Concluida' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${p.status}</span>
+                    </div>
+                `;
+            });
+
+            localStorage.setItem('horizon_plano', JSON.stringify(planoData));
+        }
+
+        function filterPlano() {
+            const query = document.getElementById('search-plano').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-plano-status').value;
+
+            const filtered = planoData.filter(item => {
+                const matchQuery = item.acao.toLowerCase().includes(query) || item.resp.toLowerCase().includes(query) || item.comentario.toLowerCase().includes(query);
+                const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
+                return matchQuery && matchStatus;
+            });
+
+            renderPlano(filtered);
+        }
+
+        // Plano Modal management
+        function openAddPlanoModal() {
+            document.getElementById('plano-modal-title').innerText = "Nova Ação do Plano";
+            document.getElementById('plano-edit-id').value = "";
+            document.getElementById('p-acao').value = "";
+            document.getElementById('p-prio').value = "M";
+            document.getElementById('p-resp').value = "Síndico";
+            document.getElementById('p-inicio').value = "";
+            document.getElementById('p-termino').value = "";
+            document.getElementById('p-comentario').value = "";
+            document.getElementById('p-status').value = "Em Andamento";
+            document.getElementById('modal-plano').classList.remove('hidden');
+        }
+
+        function editPlano(id) {
+            const item = planoData.find(p => p.id === id);
+            if(item) {
+                document.getElementById('plano-modal-title').innerText = `Editar Ação #${id}`;
+                document.getElementById('plano-edit-id').value = item.id;
+                document.getElementById('p-acao').value = item.acao;
+                document.getElementById('p-prio').value = item.prio;
+                document.getElementById('p-resp').value = item.resp;
+                document.getElementById('p-inicio').value = item.inicio;
+                document.getElementById('p-termino').value = item.termino;
+                document.getElementById('p-comentario').value = item.comentario;
+                document.getElementById('p-status').value = item.status;
+                document.getElementById('modal-plano').classList.remove('hidden');
+            }
+        }
+
+        function savePlano() {
+            const editId = document.getElementById('plano-edit-id').value;
+            const acao = document.getElementById('p-acao').value.trim();
+            const prio = document.getElementById('p-prio').value;
+            const resp = document.getElementById('p-resp').value.trim();
+            const inicio = document.getElementById('p-inicio').value.trim();
+            const termino = document.getElementById('p-termino').value.trim();
+            const comentario = document.getElementById('p-comentario').value.trim();
+            const status = document.getElementById('p-status').value;
+
+            if(!acao || !resp) {
+                alert("Preencha a ação e o responsável.");
+                return;
+            }
+
+            if(!editId) {
+                const newId = planoData.length > 0 ? Math.max(...planoData.map(p => p.id)) + 1 : 1;
+                planoData.unshift({ id: newId, acao, prio, resp, inicio, termino, comentario, status });
+                showToast("Ação adicionada ao Plano com sucesso!");
+            } else {
+                const item = planoData.find(p => p.id == editId);
+                if(item) {
+                    item.acao = acao;
+                    item.prio = prio;
+                    item.resp = resp;
+                    item.inicio = inicio;
+                    item.termino = termino;
+                    item.comentario = comentario;
+                    item.status = status;
+                    showToast("Ação atualizada com sucesso!");
+                }
+            }
+
+            closeModal('modal-plano');
+            renderPlano();
+        }
+
+        function deletePlano(id) {
+            if(confirm("Deseja realmente excluir esta ação do plano?")) {
+                planoData = planoData.filter(p => p.id !== id);
+                renderPlano();
+                showToast("Ação excluída com sucesso!", "error");
+            }
+        }
+
         // Render Pendencias Table
         function renderTable(dataToRender = pendenciasData) {
             const tbody = document.getElementById('table-body');
@@ -682,18 +999,16 @@
                         </span>
                     </td>
                     <td class="p-4 text-center space-x-2">
-                        <button onclick="toggleStatus(${item.id})" title="Alternar Status" class="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
-                        <button onclick="editPendencia(${item.id})" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deletePendencia(${item.id})" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="secureAction(() => toggleStatus(${item.id}))" title="Alternar Status" class="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="secureAction(() => editPendencia(${item.id}))" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="secureAction(() => deletePendencia(${item.id}))" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            // Update KPIs
             document.getElementById('kpi-total').innerText = pendenciasData.length;
             document.getElementById('kpi-ok').innerText = pendenciasData.filter(i => i.status === 'OK').length;
-            document.getElementById('kpi-pendentes').innerText = pendenciasData.filter(i => i.status === 'PENDENTE').length;
 
             localStorage.setItem('horizon_pendencias', JSON.stringify(pendenciasData));
         }
@@ -725,8 +1040,8 @@
                         <p class="text-xs text-slate-500 mt-1 font-medium">${acc.type === 'credor' ? 'Saldo Credor' : 'Saldo Devedor / Passivo'}</p>
                     </div>
                     <div class="flex justify-end space-x-2 mt-4 pt-3 border-t border-slate-100">
-                        <button onclick="editAccount('${acc.id}')" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded bg-indigo-50 cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
-                        <button onclick="deleteAccount('${acc.id}')" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded bg-rose-50 cursor-pointer"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        <button onclick="secureAction(() => editAccount('${acc.id}'))" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded bg-indigo-50 cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
+                        <button onclick="secureAction(() => deleteAccount('${acc.id}'))" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded bg-rose-50 cursor-pointer"><i class="fa-solid fa-trash"></i> Excluir</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -793,8 +1108,8 @@
                             <span class="${prioColor}">${item.prioridade}</span>
                         </div>
                         <div class="space-x-1">
-                            <button onclick="editSugestao(${item.id})" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteSugestao(${item.id})" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
+                            <button onclick="secureAction(() => editSugestao(${item.id}))" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="secureAction(() => deleteSugestao(${item.id}))" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
                         </div>
                     </div>
                 `;
@@ -1079,6 +1394,7 @@
         window.onload = function() {
             document.getElementById('global-reference-month').value = globalRefMonth;
             updateGlobalReference(globalRefMonth);
+            renderPlano();
             renderTable();
             renderAccounts();
             renderSugestoes();
