@@ -722,7 +722,7 @@
 
         function verifyPin() {
             const pin = document.getElementById('pin-input').value;
-            if(pin === '1234') {
+            if(pin === '6516') {
                 closeModal('modal-pin');
                 showToast("Acesso autorizado!");
                 if(pendingAction) {
@@ -730,7 +730,7 @@
                     pendingAction = null;
                 }
             } else {
-                showToast("Senha incorreta! Use 1234.", "error");
+                showToast("Senha incorreta! tente novamente.", "error");
                 document.getElementById('pin-input').value = "";
                 document.getElementById('pin-input').focus();
             }
