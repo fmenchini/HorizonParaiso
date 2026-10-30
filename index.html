@@ -3,84 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condomínio Horizon Paraíso - Painel de Gestão e Monitoramento</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Gestão Condominial Horizon Paraíso</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Inter & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Print Styles for Perfect PDF Export */
+        body { font-family: 'Inter', sans-serif; }
         @media print {
-            body {
-                background: white !important;
-                color: black !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-break {
-                page-break-before: always;
-            }
-            .print-shadow {
-                box-shadow: none !important;
-                border: 1px solid #e2e8f0 !important;
-            }
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-break { page-break-after: always; }
+            box-shadow { box-shadow: none !important; }
+            border { border-color: #cbd5e1 !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans h-full flex flex-col justify-between">
+<body class="bg-slate-900 text-slate-100 min-h-full flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-medium">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-msg">Ação realizada com sucesso!</span>
-    </div>
-
-    <!-- Top Navbar -->
-    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40 no-print">
+    <!-- TOP HEADER BAR -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-z-40 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-inner flex items-center justify-center">
-                    <i class="fa-solid fa-building-shield text-xl"></i>
+                <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-building-shield"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-base tracking-wide" id="header-condo-title">Condomínio Horizon Paraíso</h1>
-                    <p class="text-xs text-slate-400" id="header-subtitle">Portal Administrativo & Monitoramento</p>
+                    <h1 class="font-bold text-sm sm:text-base text-white tracking-wide">Condomínio Horizon Paraíso</h1>
+                    <p class="text-[11px] text-slate-400">R. Cubatão, 1061 - Vila Mariana, São Paulo - SP</p>
                 </div>
             </div>
-            
+
+            <!-- GLOBAL CONTROLS -->
             <div class="flex items-center space-x-3">
-                <div class="hidden md:flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
-                    <span class="text-slate-400 font-medium"><i class="fa-solid fa-calendar-days text-indigo-400 mr-1"></i> Mês de Referência Global:</span>
-                    <input type="month" id="global-reference-month" value="2026-10" onchange="updateGlobalReference(this.value)" class="bg-slate-900 text-indigo-400 font-semibold px-2 py-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
+                <div class="hidden sm:flex items-center space-x-2 bg-slate-800/80 border border-slate-700 rounded-xl px-3 py-1.5 text-xs">
+                    <span class="text-slate-400 font-medium"><i class="fa-solid fa-calendar-days mr-1.5 text-indigo-400"></i>Ref. Global:</span>
+                    <input type="text" id="global-ref-month" value="Outubro de 2026" onchange="updateGlobalReference(this.value)" class="bg-transparent text-white font-semibold focus:outline-none w-32">
                 </div>
-                <button onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700 flex items-center space-x-1.5 transition cursor-pointer" title="Configurações e Senha">
-                    <i class="fa-solid fa-key"></i>
-                    <span class="hidden sm:inline">Senha</span>
+
+                <button onclick="openSettingsModal()" title="Configurações & Senha" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-medium border border-slate-700 transition cursor-pointer flex items-center space-x-1.5">
+                    <i class="fa-solid fa-gear"></i>
+                    <span class="hidden md:inline">Segurança</span>
                 </button>
-                <button onclick="triggerPDF()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition cursor-pointer">
+
+                <button onclick="triggerPDFExport()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md shadow-indigo-600/20 flex items-center space-x-2 transition cursor-pointer">
                     <i class="fa-solid fa-file-pdf"></i>
                     <span>Exportar PDF</span>
                 </button>
@@ -88,209 +56,188 @@
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-slate-900 border-b border-slate-800 no-print sticky top-16 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5 no-scrollbar">
+                <button onclick="switchTab('dashboard')" class="tab-btn active px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-indigo-600 text-white shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
+                </button>
+                <button onclick="switchTab('acoes')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-list-check mr-1.5"></i> Plano de Ação
+                </button>
+                <button onclick="switchTab('pendencias')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-clipboard-list mr-1.5"></i> Gestão de Vistorias
+                </button>
+                <button onclick="switchTab('contas')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-wallet mr-1.5"></i> Prestação de Contas
+                </button>
+                <button onclick="switchTab('sugestoes')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-lightbulb mr-1.5 text-amber-400"></i> Sugestões & Benfeitorias
+                </button>
+                <button onclick="switchTab('reformas')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-hammer mr-1.5"></i> Reformas (NBR 16280)
+                </button>
+                <button onclick="switchTab('energia')" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
+                    <i class="fa-solid fa-bolt mr-1.5"></i> Energia & SAVE
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
 
-        <!-- Navigation Tabs -->
-        <nav class="flex space-x-2 border-b border-slate-200 pb-3 overflow-x-auto no-print">
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-sm flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span>Dashboard Executivo</span>
-            </button>
-            <button onclick="switchTab('plano')" id="btn-plano" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <span>Plano de Ação</span>
-            </button>
-            <button onclick="switchTab('pendencias')" id="btn-pendencias" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-list-check"></i>
-                <span>Gestão de Vistorias & Pendências</span>
-            </button>
-            <button onclick="switchTab('financeiro')" id="btn-financeiro" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-wallet"></i>
-                <span>Prestação de Contas (Por Competência)</span>
-            </button>
-            <button onclick="switchTab('sugestoes')" id="btn-sugestoes" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-lightbulb"></i>
-                <span>Sugestões & Benfeitorias</span>
-            </button>
-            <button onclick="switchTab('reformas')" id="btn-reformas" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-helmet-safety"></i>
-                <span>Regras de Reformas</span>
-            </button>
-            <button onclick="switchTab('energia')" id="btn-energia" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Energia Elétrica & SAVE</span>
-            </button>
-        </nav>
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-800 border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 text-xs">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+            <span id="toast-msg">Operação realizada com sucesso!</span>
+        </div>
 
         <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-content space-y-6">
-            <div class="bg-gradient-to-r from-indigo-900 to-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
-                <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl">
-                    <span class="bg-indigo-500/30 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/30" id="dash-badge-ref">Relatório Executivo Consolidado</span>
-                    <h2 class="text-2xl md:text-3xl font-bold mt-3">Painel de Monitoramento Condominial</h2>
-                    <p class="text-slate-300 text-sm mt-2 leading-relaxed">
-                        Acompanhe em tempo real o Plano de Ação oficial, o andamento das pendências de vistorias, o balanço financeiro por competência e os estudos de infraestrutura elétrica.
+            <!-- Welcome Banner -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-indigo-900/60 via-slate-800 to-slate-900 border border-indigo-500/20 p-6 sm:p-8 rounded-3xl shadow-xl">
+                <div class="relative z-10 max-w-2xl space-y-3">
+                    <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Painel Executivo Condominial</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Horizon Paraíso • Gestão Transparente</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Acompanhe em tempo real a evolução das pendências de vistoria de entrega de obra, planos de ação, prestação de contas detalhada por competência, diretrizes de reformas e capacidade de energia elétrica para veículos.
                     </p>
+                </div>
+                <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10 text-9xl text-indigo-400 pointer-events-none">
+                    <i class="fa-solid fa-building"></i>
                 </div>
             </div>
 
             <!-- KPI Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ações no Plano</span>
-                        <div class="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-clipboard-list"></i>
-                        </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-800/90 border border-slate-700/80 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <p class="text-xs font-medium text-slate-400">Total de Vistorias</p>
+                        <h3 class="text-2xl font-bold text-white" id="kpi-total">0</h3>
+                        <p class="text-[10px] text-slate-400">Itens catalogados</p>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-plano-total">27</h3>
-                        <p class="text-xs text-indigo-600 mt-1 font-medium">Plano de Ação Oficial</p>
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl">
+                        <i class="fa-solid fa-clipboard-list"></i>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total de Vistorias</span>
-                        <div class="bg-amber-50 text-amber-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
+                <div class="bg-slate-800/90 border border-slate-700/80 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <p class="text-xs font-medium text-slate-400">Pendências Resolvidas</p>
+                        <h3 class="text-2xl font-bold text-emerald-400" id="kpi-ok">0</h3>
+                        <p class="text-[10px] text-slate-400">Itens com status OK</p>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-total">379</h3>
-                        <p class="text-xs text-slate-500 mt-1 font-medium">Torre A & B</p>
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl">
+                        <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Vistorias Resolvidas (OK)</span>
-                        <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
+                <div class="bg-slate-800/90 border border-slate-700/80 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <p class="text-xs font-medium text-slate-400">Saldo Líquido em Caixa</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-indigo-400" id="kpi-saldo">R$ 0,00</h3>
+                        <p class="text-[10px] text-slate-400" id="kpi-saldo-mes">Referência Competência</p>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="text-3xl font-extrabold text-slate-900" id="kpi-ok">142</h3>
-                        <p class="text-xs text-emerald-600 mt-1 font-medium">Concluídos pela construtora</p>
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-xl">
+                        <i class="fa-solid fa-wallet"></i>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Saldo Líquido (Caixa)</span>
-                        <div class="bg-blue-50 text-blue-600 p-2.5 rounded-xl">
-                            <i class="fa-solid fa-vault"></i>
-                        </div>
+                <div class="bg-slate-800/90 border border-slate-700/80 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <p class="text-xs font-medium text-slate-400">Capacidade Elétrica SAVE</p>
+                        <h3 class="text-2xl font-bold text-amber-400">480,12 kVA</h3>
+                        <p class="text-[10px] text-slate-400">22 estações previstas</p>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="text-2xl font-extrabold text-slate-900" id="kpi-saldo">R$ 127.263,34</h3>
-                        <p class="text-xs text-slate-500 mt-1" id="kpi-competencia-label">Ref. Setembro / 2026</p>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl">
+                        <i class="fa-solid fa-bolt"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Summaries Grid -->
+            <!-- Quick Summary Panels -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-clipboard-check text-indigo-600"></i>
-                            <span>Destaques do Plano de Ação</span>
+                <!-- Status das Ações -->
+                <div class="bg-slate-800/90 border border-slate-700/80 p-6 rounded-3xl shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                        <h3 class="font-bold text-white text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check text-indigo-400"></i>
+                            <span>Resumo do Plano de Ação</span>
                         </h3>
-                        <button onclick="switchTab('plano')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Completo</button>
+                        <button onclick="switchTab('acoes')" class="text-indigo-400 hover:text-indigo-300 text-xs font-semibold cursor-pointer">Ver Completo →</button>
                     </div>
-                    <div class="space-y-3 text-sm" id="dashboard-plano-highlights">
-                        <!-- Populated by JS -->
+                    <div class="space-y-3" id="dashboard-acoes-summary">
+                        <!-- Injected via JS -->
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-bolt text-amber-500"></i>
-                            <span>Veículos Elétricos & Energia (SAVE)</span>
+                <!-- Resumo Contas do Mês -->
+                <div class="bg-slate-800/90 border border-slate-700/80 p-6 rounded-3xl shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                        <h3 class="font-bold text-white text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-wallet text-indigo-400"></i>
+                            <span>Balanço Financeiro (Competência Selecionada)</span>
                         </h3>
-                        <button onclick="switchTab('energia')" class="text-xs text-indigo-600 hover:underline font-semibold cursor-pointer">Ver Estudo</button>
+                        <button onclick="switchTab('contas')" class="text-indigo-400 hover:text-indigo-300 text-xs font-semibold cursor-pointer">Gerenciar Contas →</button>
                     </div>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between border-b border-slate-100 pb-2">
-                            <span class="text-slate-600">Estações Previstas (SAVE):</span>
-                            <span class="font-bold text-slate-900">22 Estações (7,04 kVA cada)</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-100 pb-2">
-                            <span class="text-slate-600">Carga Total das Estações:</span>
-                            <span class="font-bold text-slate-900">154,88 kVA</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Status de Viabilidade:</span>
-                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Viável com DLM</span>
-                        </div>
+                    <div class="space-y-3" id="dashboard-contas-summary">
+                        <!-- Injected via JS -->
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- TAB 2: PLANO DE AÇÃO -->
-        <section id="tab-plano" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <section id="tab-acoes" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900">Plano de Ação - Horizon Paraíso (Residencial)</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Ações, responsáveis, prazos e comentários evolutivos extraídos do documento oficial do condomínio.</p>
+                    <h2 class="text-xl font-bold text-white">Plano de Ação • Horizon Paraíso Residencial</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Ações, responsáveis, prazos e status de execução consolidados.</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <input type="text" id="search-plano" onkeyup="filterPlano()" placeholder="Pesquisar ação ou responsável..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
-                    
-                    <select id="filter-plano-status" onchange="filterPlano()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                        <option value="ALL">Todos Status</option>
-                        <option value="Concluida">Concluída</option>
-                        <option value="Em Andamento">Em Andamento</option>
-                        <option value="Não Iniciada">Não Iniciada</option>
-                    </select>
-
-                    <button onclick="secureAction(openAddPlanoModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <input type="text" id="search-acoes" onkeyup="filterAcoes()" placeholder="Pesquisar ação..." class="px-4 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
+                    <button onclick="secureAction(openAddAcaoModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i>
                         <span>Nova Ação</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Table of Plano de Ação -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-800/90 rounded-2xl border border-slate-700 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse" id="plano-table">
+                    <table class="w-full text-left border-collapse" id="acoes-table">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200 font-semibold">
+                            <tr class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700 font-semibold">
                                 <th class="p-4">Ação / Descrição</th>
                                 <th class="p-4">Prioridade</th>
                                 <th class="p-4">Responsável</th>
-                                <th class="p-4">Início</th>
-                                <th class="p-4">Término</th>
+                                <th class="p-4">Início / Término</th>
                                 <th class="p-4">Comentário Evolutivo</th>
                                 <th class="p-4">Status</th>
                                 <th class="p-4 text-center">Ações</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700" id="plano-table-body">
-                            <!-- Dynamic rows -->
+                        <tbody class="divide-y divide-slate-700/50 text-xs text-slate-300" id="acoes-tbody">
+                            <!-- Injected via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 3: PENDENCIAS DE VISTORIA -->
+        <!-- TAB 3: GESTÃO DE VISTORIAS -->
         <section id="tab-pendencias" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900">Gestão de Pendências e Vistorias de Obra</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Baseado nos relatórios da HN Engenharia (Torre A, Torre B e Áreas Comuns).</p>
+                    <h2 class="text-xl font-bold text-white">Gestão de Vistorias e Pendências de Obra</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Relatórios técnicos da HN Engenharia (Torres, Áreas Comuns, Laje, etc.).</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <input type="text" id="search-input" onkeyup="filterPendencias()" placeholder="Pesquisar item ou local..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
+                    <input type="text" id="search-input" onkeyup="filterPendencias()" placeholder="Pesquisar item ou local..." class="px-4 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-60">
                     
-                    <select id="filter-status" onchange="filterPendencias()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    <select id="filter-status" onchange="filterPendencias()" class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                         <option value="ALL">Todos Status</option>
                         <option value="PENDENTE">Pendente</option>
                         <option value="OK">Resolvido (OK)</option>
@@ -304,20 +251,22 @@
             </div>
 
             <!-- Table of Pendencias -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-800/90 rounded-2xl border border-slate-700 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse" id="pendencias-table">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200 font-semibold">
+                            <tr class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700 font-semibold">
                                 <th class="p-4">Item #</th>
                                 <th class="p-4">Local / Setor</th>
                                 <th class="p-4">Referência</th>
                                 <th class="p-4">Descrição do Problema</th>
+                                <th class="p-4">Início</th>
+                                <th class="p-4">Término</th>
                                 <th class="p-4">Status</th>
                                 <th class="p-4 text-center">Ações</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700" id="table-body">
+                        <tbody class="divide-y divide-slate-700/50 text-xs text-slate-300" id="table-body">
                             <!-- Dynamic rows injected via JS -->
                         </tbody>
                     </table>
@@ -326,121 +275,140 @@
         </section>
 
         <!-- TAB 4: PRESTAÇÃO DE CONTAS -->
-        <section id="tab-financeiro" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">Prestação de Contas por Mês / Ano (Competência)</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Selecione o mês de competência para visualizar, adicionar ou editar as rubricas e saldos.</p>
+        <section id="tab-contas" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Prestação de Contas Condominiais</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Controle mensal de receitas, fundos, despesas e saldos por competência.</p>
+                    </div>
                 </div>
+                
                 <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center space-x-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-xs">
-                        <span class="text-slate-500 font-medium">Competência:</span>
-                        <input type="month" id="finance-month-filter" value="2026-09" onchange="renderAccounts()" class="bg-transparent font-bold text-indigo-600 focus:outline-none cursor-pointer">
+                    <div class="flex items-center space-x-2 bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs">
+                        <span class="text-slate-400"><i class="fa-solid fa-filter mr-1 text-indigo-400"></i>Competência:</span>
+                        <select id="competencia-filter" onchange="renderAccounts()" class="bg-transparent text-white font-semibold focus:outline-none cursor-pointer">
+                            <!-- Populated dynamically -->
+                        </select>
                     </div>
 
-                    <button onclick="secureAction(openAddAccountModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer">
+                    <button onclick="secureAction(openAddAccountModal)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Adicionar Conta / Rubrica</span>
+                        <span>Nova Conta / Rubrica</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Accounts Dynamic Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="accounts-grid">
-                <!-- Dynamically populated cards -->
+            <!-- Financial Cards Summary -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="finance-cards">
+                <!-- Dynamically populated summary cards -->
             </div>
 
-            <!-- Consolidated Box -->
-            <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
-                <div>
-                    <span class="bg-emerald-500/20 text-emerald-300 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/30" id="box-competencia-badge">Competência Selecionada</span>
-                    <h3 class="text-2xl font-bold mt-2">Valor Líquido Total em Caixa (Mês)</h3>
-                    <p class="text-slate-300 text-xs mt-1">Soma de contas credoras menos contas devedoras do mês selecionado.</p>
+            <!-- Accounts Table -->
+            <div class="bg-slate-800/90 rounded-2xl border border-slate-700 shadow-sm overflow-hidden">
+                <div class="p-4 bg-slate-900/60 border-b border-slate-700 flex justify-between items-center">
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider">Detalhamento das Contas da Competência</h3>
+                    <span class="text-xs text-slate-400" id="current-competencia-label">Exibindo dados</span>
                 </div>
-                <div class="text-right">
-                    <span class="text-4xl md:text-5xl font-black text-emerald-400" id="val-liquido">R$ 0,00</span>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/40 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-700 font-semibold">
+                                <th class="p-4">Conta / Rubrica</th>
+                                <th class="p-4">Competência</th>
+                                <th class="p-4">Tipo</th>
+                                <th class="p-4 text-right">Valor (R$)</th>
+                                <th class="p-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50 text-xs text-slate-300" id="accounts-tbody">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
         <!-- TAB 5: SUGESTÕES & BENFEITORIAS -->
         <section id="tab-sugestoes" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900">Sugestões de Melhoria & Benfeitorias</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Propostas de valorização patrimonial, inovação e aperfeiçoamento para o condomínio.</p>
+                    <h2 class="text-xl font-bold text-white">Sugestões de Melhoria e Identificação de Benfeitorias</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Espaço colaborativo para propor melhorias, estimar custos e priorizar investimentos.</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <select id="filter-sug-cat" onchange="renderSugestoes()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                        <option value="ALL">Todas Categorias</option>
-                        <option value="Sustentabilidade">Sustentabilidade</option>
-                        <option value="Lazer & Bem-estar">Lazer & Bem-estar</option>
-                        <option value="Segurança & Manutenção">Segurança & Manutenção</option>
-                        <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
-                    </select>
-
-                    <button onclick="openAddSugestaoModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
-                        <i class="fa-solid fa-plus"></i>
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <button onclick="openAddSugestaoModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow flex items-center space-x-2 transition cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-lightbulb"></i>
                         <span>Nova Sugestão / Benfeitoria</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Sugestoes Grid -->
+            <!-- Sugestões Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="sugestoes-grid">
-                <!-- Dynamically populated cards -->
+                <!-- Cards injected via JS -->
             </div>
         </section>
 
         <!-- TAB 6: REFORMAS -->
         <section id="tab-reformas" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                <div class="border-b border-slate-100 pb-4">
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Manual do Condômino</span>
-                    <h2 class="text-xl font-bold text-slate-900 mt-1">Procedimentos e Orientações para Reformas (NBR 16280/20)</h2>
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-3xl shadow-sm space-y-6">
+                <div class="border-b border-slate-700 pb-4">
+                    <h2 class="text-xl font-bold text-white">Procedimentos e Orientações para Reformas em Apartamentos</h2>
+                    <p class="text-xs text-slate-400 mt-1">Conforme normas internas do condomínio e ABNT NBR 16280/20.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600">
-                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-file-contract text-indigo-600"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300">
+                    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700/80 space-y-3">
+                        <h3 class="font-bold text-indigo-400 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-file-shield"></i>
                             <span>1. Documentação Exigida</span>
                         </h3>
-                        <p class="text-xs leading-relaxed">
-                            Envio prévio para o e-mail de obras: Termo de Responsabilidade, Plano de Reformas (NBR 16280/20), ART/RRT de execução (engenheiro civil ou arquiteto). Para reformas simples dispensadas por norma, assume-se responsabilidade total com envio do termo e plano assinados.
-                        </p>
+                        <p class="leading-relaxed">Envio prévio para o e-mail de obras da engenharia do condomínio contendo:</p>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                            <li><strong>Termo de Responsabilidade:</strong> Preenchido e assinado pelo proprietário.</li>
+                            <li><strong>Plano de Reformas (NBR 16280/20):</strong> Detalhando todas as intervenções.</li>
+                            <li><strong>ART / RRT de Execução:</strong> Emitida por engenheiro civil ou arquiteto (exceto reformas simples dispensadas por norma, onde o morador assume total responsabilidade).</li>
+                            <li><strong>Croquis e Projetos:</strong> Quando solicitados pela engenharia.</li>
+                        </ul>
                     </div>
 
-                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700/80 space-y-3">
+                        <h3 class="font-bold text-indigo-400 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-clock"></i>
                             <span>2. Horários Permitidos</span>
                         </h3>
-                        <p class="text-xs leading-relaxed">
-                            <strong>Segunda a sexta-feira:</strong> Das 08:00h às 17:00h.<br>
-                            <strong>Sábados:</strong> Das 08:00h às 12:00h.<br>
-                            <strong>Domingos e Feriados:</strong> Estritamente proibido.
-                        </p>
+                        <p class="leading-relaxed">Trabalhos, ruídos e movimentações de materiais devem seguir rigorosamente:</p>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                            <li><strong>Segunda a sexta-feira:</strong> Das 08:00h às 17:00h.</li>
+                            <li><strong>Sábados:</strong> Das 08:00h às 12:00h.</li>
+                            <li><strong>Domingos e Feriados:</strong> Estritamente proibido qualquer trabalho ruidoso ou obra.</li>
+                        </ul>
                     </div>
 
-                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-shield-heart text-indigo-600"></i>
+                    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700/80 space-y-3">
+                        <h3 class="font-bold text-indigo-400 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-halved"></i>
                             <span>3. Proteções Obrigatórias</span>
                         </h3>
-                        <p class="text-xs leading-relaxed">
-                            Cantoneiras nas quinas e arestas das áreas comuns do elevador até a porta da unidade, aplicação de Salva-Piso em todo o trajeto, e telas de proteção/tapumes em intervenções com risco de queda de materiais. Aviso prévio obrigatório à portaria.
-                        </p>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                            <li><strong>Arestas e Paredes:</strong> Instalação de cantoneiras desde o elevador de serviço até a porta da unidade.</li>
+                            <li><strong>Pisos (Salva-Piso):</strong> Proteção completa do piso nas áreas comuns de circulação.</li>
+                            <li><strong>Telas e Tapumes:</strong> Obrigatórios em áreas com risco de queda de materiais (varandas, áreas de serviço).</li>
+                            <li><strong>Aviso Prévio:</strong> Informar portaria e administração antes de iniciar.</li>
+                        </ul>
                     </div>
 
-                    <div class="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
-                        <h3 class="font-bold text-slate-900 flex items-center space-x-2">
-                            <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
-                            <span>4. Proibições Técnicas</span>
+                    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700/80 space-y-3">
+                        <h3 class="font-bold text-rose-400 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>4. Principais Proibições e Restrições</span>
                         </h3>
-                        <p class="text-xs leading-relaxed">
-                            Proibida a troca do disjuntor geral de entrada por amperagem superior. Vedada alteração de fachada, esquadrias ou partes externas (Art. 1.336 CC). Penalidades incluem advertências, multas e paralisação imediata.
-                        </p>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                            <li><strong>Disjuntor Geral:</strong> Expressamente proibida a troca do disjuntor de entrada por amperagem superior.</li>
+                            <li><strong>Fachada:</strong> Vedada qualquer alteração de forma, cor ou esquadrias (Art. 1.336 do Código Civil).</li>
+                            <li><strong>Penalidades:</strong> A ausência de proteções ou diretrizes acarreta advertências, multas e paralisação imediata.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -448,588 +416,559 @@
 
         <!-- TAB 7: ENERGIA & SAVE -->
         <section id="tab-energia" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                <div class="border-b border-slate-100 pb-4 flex justify-between items-center">
+            <div class="bg-slate-800/90 border border-slate-700 p-6 rounded-3xl shadow-sm space-y-6">
+                <div class="border-b border-slate-700 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Relatório Técnico nº 226/2026 (CGM Engenharia)</span>
-                        <h3 class="text-xl font-bold text-slate-900 mt-1">Estações de Recarga de Veículos Elétricos (SAVE)</h3>
+                        <h2 class="text-xl font-bold text-white">Relatório Técnico de Análise Elétrica & SAVE</h2>
+                        <p class="text-xs text-slate-400 mt-1">Estudo de viabilidade para implantação de Estações de Recarga de Veículos Elétricos (CGM Engenharia).</p>
                     </div>
-                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-lg" id="energia-ref-label">Outubro / 2026</span>
+                    <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 text-xs font-mono px-3 py-1.5 rounded-xl">Relatório Nº 226/2026</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <span class="text-xs text-slate-500 block">Estações Previstas</span>
-                        <span class="text-2xl font-bold text-slate-900 mt-1 block">22 Unidades</span>
-                        <span class="text-[11px] text-slate-400">7,04 kVA cada (Bifásica 32A)</span>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-700">
+                        <p class="text-[11px] text-slate-400">Capacidade Total Edificação</p>
+                        <p class="text-xl font-bold text-white mt-1">480,12 kVA</p>
+                        <p class="text-[10px] text-emerald-400 mt-1">Sistemas Trifásicos 220V</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <span class="text-xs text-slate-500 block">Carga Total Adicional</span>
-                        <span class="text-2xl font-bold text-indigo-600 mt-1 block">154,88 kVA</span>
-                        <span class="text-[11px] text-slate-400">Incorporada ao QD-ADM</span>
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-700">
+                        <p class="text-[11px] text-slate-400">Carga Prevista (22 Estações)</p>
+                        <p class="text-xl font-bold text-amber-400 mt-1">154,88 kVA</p>
+                        <p class="text-[10px] text-slate-400 mt-1">7,04 kVA por carregador</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <span class="text-xs text-slate-500 block">Capacidade Geral Edificação</span>
-                        <span class="text-2xl font-bold text-emerald-600 mt-1 block">480,12 kVA</span>
-                        <span class="text-[11px] text-slate-400">Margem global: 208,14 kVA</span>
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-700">
+                        <p class="text-[11px] text-slate-400">Margem Global Após Reserva</p>
+                        <p class="text-xl font-bold text-indigo-400 mt-1">160,13 kVA</p>
+                        <p class="text-[10px] text-slate-400 mt-1">Segurança de 10% aplicada</p>
                     </div>
                 </div>
 
-                <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <strong>Recomendação Técnica:</strong> O cenário de 22 estações é viável pelo critério de potência aparente, exigindo obrigatoriamente projeto executivo, balanceamento de fases, disjuntores exclusivos com DR específico e Gerenciamento Dinâmico de Carga (DLM) para preservar a reserva técnica de 10% na Administração.
-                </p>
+                <div class="space-y-4 text-xs text-slate-300 leading-relaxed bg-slate-900/40 p-5 rounded-2xl border border-slate-700/80">
+                    <h3 class="font-bold text-white text-sm mb-2"><i class="fa-solid fa-circle-info text-indigo-400 mr-2"></i>Conclusões e Diretrizes de Engenharia</h3>
+                    <p>
+                        O cenário de 22 estações de recarga na Administração é viável pelo critério de potência aparente agregada, condicionado ao gerenciamento dinâmico de carga (DLM) por fase e validação dos alimentadores.
+                    </p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>QD-ADM:</strong> Carga estimada passa de 57,28 kVA para 212,16 kVA (Capacidade teórica 630A: 240,06 kVA).</li>
+                        <li><strong>Entrada Geral:</strong> Demanda global projetada em 271,98 kVA, com ampla folga em relação aos 480,12 kVA informados.</li>
+                        <li><strong>Recomendações:</strong> Utilização de circuitos dedicados, proteção individual com DR de 30mA, dispositivos DPS e atendimento rigoroso à IT 41 dos Bombeiros e ABNT NBR 5410 / NBR 17019.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500 no-print">
-        <p>Condomínio Horizon Paraíso — Rua Cubatão, 1061 / 1049 - Vila Mariana, São Paulo - SP</p>
-        <p class="mt-1">Sistema gerencial otimizado para auditoria de vistorias, prestação de contas, plano de ação e engenharia.</p>
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-xs text-slate-500 mt-auto no-print">
+        <p>Condomínio Horizon Paraíso • Gestão Imobiliária Inteligente & Transparente</p>
     </footer>
 
-    <!-- MODAL: PIN SECURITY (4 DIGITS) -->
-    <div id="modal-pin" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200 text-center">
-            <div class="bg-indigo-50 text-indigo-600 w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-xl shadow-inner">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <div>
-                <h3 class="font-bold text-slate-900 text-lg">Acesso Restrito</h3>
-                <p class="text-xs text-slate-500 mt-1">Insira a senha de 4 dígitos para autorizar alterações.</p>
-            </div>
-            <div>
-                <input type="password" id="pin-input" maxlength="4" class="w-36 text-center tracking-widest text-2xl px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
-            </div>
-            <div class="flex justify-center space-x-3 pt-2">
-                <button onclick="closeModal('modal-pin')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
-                <button onclick="verifyPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: SETTINGS / CHANGE PIN -->
-    <div id="modal-settings" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200 text-left">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="font-bold text-slate-900 text-base flex items-center space-x-2">
-                    <i class="fa-solid fa-key text-indigo-600"></i>
-                    <span>Alterar Senha de Acesso</span>
-                </h3>
-                <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Senha Atual (4 dígitos)</label>
-                    <input type="password" id="set-current-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Nova Senha (4 dígitos)</label>
-                    <input type="password" id="set-new-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Confirmar Nova Senha</label>
-                    <input type="password" id="set-confirm-pin" maxlength="4" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="••••">
-                </div>
-            </div>
-            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button onclick="closeModal('modal-settings')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
-                <button onclick="saveNewPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Atualizar Senha</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD / EDIT PLANO DE AÇÃO -->
-    <div id="modal-plano" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="plano-modal-title" class="font-bold text-slate-900 text-base">Nova Ação do Plano</h3>
-                <button onclick="closeModal('modal-plano')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            
-            <input type="hidden" id="plano-edit-id" value="">
-
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Ação / Descrição</label>
-                    <textarea id="p-acao" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descreva a ação..."></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
-                        <select id="p-prio" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                            <option value="A">Alta (A)</option>
-                            <option value="M">Média (M)</option>
-                            <option value="B">Baixa (B)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Responsável</label>
-                        <input type="text" id="p-resp" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Síndico, Trisul, Comissão">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Início</label>
-                        <input type="text" id="p-inicio" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Término</label>
-                        <input type="text" id="p-termino" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Comentário Evolutivo</label>
-                    <textarea id="p-comentario" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Detalhes da execução..."></textarea>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Status de Execução</label>
-                    <select id="p-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                        <option value="Concluida">Concluída</option>
-                        <option value="Em Andamento">Em Andamento</option>
-                        <option value="Não Iniciada">Não Iniciada</option>
-                        <option value="Atrasada">Atrasada</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button onclick="closeModal('modal-plano')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
-                <button onclick="savePlano()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Ação</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL: ADD / EDIT PENDENCIA -->
-    <div id="modal-pendencia" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="modal-title" class="font-bold text-slate-900 text-base">Adicionar Nova Pendência</h3>
-                <button onclick="closeModal('modal-pendencia')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-pendencia" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 id="modal-title" class="font-bold text-white text-base">Adicionar Nova Pendência</h3>
+                <button onclick="closeModal('modal-pendencia')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
             <input type="hidden" id="edit-index" value="-1">
 
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Local / Setor</label>
-                    <input type="text" id="m-local" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Barrilete laje, Torre A 24º andar">
+                    <label class="block font-semibold text-slate-300 mb-1">Local / Setor</label>
+                    <input type="text" id="m-local" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Barrilete laje, Torre A 24º andar">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Referência</label>
-                    <input type="text" id="m-ref" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: BARRILETE, ELEVADOR, PCF">
+                    <label class="block font-semibold text-slate-300 mb-1">Referência</label>
+                    <input type="text" id="m-ref" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: BARRILETE, ELEVADOR, PCF">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Descrição do Problema</label>
-                    <textarea id="m-prob" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descreva detalhadamente a ocorrência..."></textarea>
+                    <label class="block font-semibold text-slate-300 mb-1">Descrição do Problema</label>
+                    <textarea id="m-prob" rows="3" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descreva detalhadamente a ocorrência..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Data Início</label>
+                        <input type="text" id="m-inicio" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Data Término</label>
+                        <input type="text" id="m-termino" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
+                    </div>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Status</label>
-                    <select id="m-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    <label class="block font-semibold text-slate-300 mb-1">Status</label>
+                    <select id="m-status" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                         <option value="PENDENTE">Pendente</option>
                         <option value="OK">Resolvido (OK)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button onclick="closeModal('modal-pendencia')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-700">
+                <button onclick="closeModal('modal-pendencia')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
                 <button onclick="savePendencia()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Pendência</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL: ADD / EDIT CONTA / RUBRICA -->
-    <div id="modal-account" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="account-modal-title" class="font-bold text-slate-900 text-base">Adicionar Nova Conta / Rubrica</h3>
-                <button onclick="closeModal('modal-account')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-conta" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 id="modal-conta-title" class="font-bold text-white text-base">Adicionar Nova Conta</h3>
+                <button onclick="closeModal('modal-conta')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
-            <input type="hidden" id="account-edit-id" value="">
+
+            <input type="hidden" id="edit-conta-id" value="">
 
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Mês de Competência</label>
-                    <input type="month" id="acc-competencia" value="2026-09" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    <label class="block font-semibold text-slate-300 mb-1">Nome da Conta / Rubrica</label>
+                    <input type="text" id="c-name" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Conta Ordinária, Fundo de Reserva, Manutenção Elevadores">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Nome da Conta / Rubrica</label>
-                    <input type="text" id="acc-name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Conta Corrente Itaú, Fundo de Obras">
+                    <label class="block font-semibold text-slate-300 mb-1">Mês de Competência</label>
+                    <input type="text" id="c-competencia" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Setembro/2026, Outubro/2026">
                 </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Tipo de Saldo</label>
-                    <select id="acc-type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                        <option value="credor">Credor (Entrada / Saldo Positivo)</option>
-                        <option value="devedor">Devedor (Saída / Passivo / Débito)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Valor (R$)</label>
-                    <input type="text" id="acc-value" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Tipo</label>
+                        <select id="c-type" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="credor">Saldo Credor (Receita / Caixa)</option>
+                            <option value="devedor">Saldo Devedor (Dívida / Saída)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Valor (R$)</label>
+                        <input type="text" id="c-value" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button onclick="closeModal('modal-account')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-700">
+                <button onclick="closeModal('modal-conta')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
                 <button onclick="saveAccount()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Conta</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT SUGESTÃO / BENFEITORIA -->
-    <div id="modal-sugestao" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="sugestao-modal-title" class="font-bold text-slate-900 text-base">Nova Sugestão ou Benfeitoria</h3>
-                <button onclick="closeModal('modal-sugestao')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- MODAL: ADD / EDIT AÇÃO -->
+    <div id="modal-acao" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 id="modal-acao-title" class="font-bold text-white text-base">Nova Ação do Plano</h3>
+                <button onclick="closeModal('modal-acao')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
-            <input type="hidden" id="sug-edit-id" value="">
-
+            <input type="hidden" id="edit-acao-id" value="">
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Título da Benfeitoria / Sugestão</label>
-                    <input type="text" id="sug-titulo" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Automação do Portão de Veículos">
+                    <label class="block font-semibold text-slate-300 mb-1">Descrição da Ação</label>
+                    <input type="text" id="ac-desc" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Manutenção portões automáticos">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Categoria</label>
-                        <select id="sug-categoria" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                            <option value="Sustentabilidade">Sustentabilidade</option>
-                            <option value="Lazer & Bem-estar">Lazer & Bem-estar</option>
-                            <option value="Segurança & Manutenção">Segurança & Manutenção</option>
-                            <option value="Inovação & Tecnologia">Inovação & Tecnologia</option>
+                        <label class="block font-semibold text-slate-300 mb-1">Prioridade</label>
+                        <select id="ac-prioridade" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="A">Alta (A)</option>
+                            <option value="M">Média (M)</option>
+                            <option value="B">Baixa (B)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
-                        <select id="sug-prioridade" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                            <option value="Baixa">Baixa</option>
-                            <option value="Média">Média</option>
-                            <option value="Alta">Alta</option>
-                            <option value="Urgente">Urgente</option>
-                        </select>
+                        <label class="block font-semibold text-slate-300 mb-1">Responsável</label>
+                        <input type="text" id="ac-resp" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Síndico / Zelador">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Custo Estimado (R$)</label>
-                        <input type="text" id="sug-custo" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+                        <label class="block font-semibold text-slate-300 mb-1">Data Início</label>
+                        <input type="text" id="ac-inicio" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Status da Proposta</label>
-                        <select id="sug-status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                            <option value="Proposta">Proposta</option>
-                            <option value="Em Análise">Em Análise</option>
-                            <option value="Aprovada">Aprovada</option>
-                            <option value="Em Execução">Em Execução</option>
-                            <option value="Concluída">Concluída</option>
-                        </select>
+                        <label class="block font-semibold text-slate-300 mb-1">Previsão Término</label>
+                        <input type="text" id="ac-termino" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="DD/MM/AAAA">
                     </div>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Descrição e Justificativa</label>
-                    <textarea id="sug-desc" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Explique os benefícios e detalhes da melhoria..."></textarea>
+                    <label class="block font-semibold text-slate-300 mb-1">Comentário Evolutivo</label>
+                    <textarea id="ac-comentario" rows="2" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Andamento da atividade..."></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Status</label>
+                    <select id="ac-status" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="Não Iniciada">Não Iniciada</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Concluida">Concluída</option>
+                        <option value="Atrasada">Atrasada</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button onclick="closeModal('modal-sugestao')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
-                <button onclick="saveSugestao()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Sugestão</button>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-700">
+                <button onclick="closeModal('modal-acao')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="saveAcao()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Ação</button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- MODAL: ADD / EDIT SUGESTÃO -->
+    <div id="modal-sugestao" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 id="modal-sug-title" class="font-bold text-white text-base">Nova Sugestão / Benfeitoria</h3>
+                <button onclick="closeModal('modal-sugestao')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <input type="hidden" id="edit-sug-id" value="">
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Título da Melhoria</label>
+                    <input type="text" id="s-title" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Instalação de cobertura na rampa">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Descrição e Benefícios</label>
+                    <textarea id="s-desc" rows="3" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Explique os ganhos para o condomínio..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Custo Estimado (R$)</label>
+                        <input type="text" id="s-cost" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="5.000,00">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Prioridade</label>
+                        <select id="s-priority" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            <option value="Alta">Alta</option>
+                            <option value="Média" selected>Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Status</label>
+                    <select id="s-status" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="Proposta">Proposta</option>
+                        <option value="Em Análise">Em Análise</option>
+                        <option value="Aprovada">Aprovada</option>
+                        <option value="Em Execução">Em Execução</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-700">
+                <button onclick="closeModal('modal-sugestao')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="saveSugestao()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Sugestão</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SECURITY PIN (AUTHORIZATION) -->
+    <div id="modal-pin" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 text-center">
+            <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-white text-base">Acesso Restrito</h3>
+                <p class="text-xs text-slate-400 mt-1">Insira a senha de 4 dígitos para autorizar alterações administrativas.</p>
+            </div>
+            <div>
+                <input type="password" id="pin-input" maxlength="4" class="w-36 text-center tracking-widest text-2xl font-mono px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••">
+            </div>
+            <div class="flex space-x-3 pt-2">
+                <button onclick="closeModal('modal-pin')" class="w-1/2 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Cancelar</button>
+                <button onclick="verifyPin()" class="w-1/2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SETTINGS (CHANGE PIN) -->
+    <div id="modal-settings" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-white text-base">Configurações de Segurança</h3>
+                <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Nova Senha (4 dígitos)</label>
+                    <input type="password" id="new-pin" maxlength="4" class="w-full text-center tracking-widest font-mono px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-700">
+                <button onclick="closeModal('modal-settings')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-semibold text-xs cursor-pointer">Fechar</button>
+                <button onclick="saveNewPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs shadow cursor-pointer">Salvar Senha</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // PIN Security mechanism
+        // --- DATA STATE & LOCALSTORAGE ---
+        let globalRefMonth = localStorage.getItem('horizon_global_ref') || "Outubro de 2026";
+        document.getElementById('global-ref-month').value = globalRefMonth;
+
+        let adminPin = localStorage.getItem('horizon_pin') || "1234";
         let pendingAction = null;
 
-        function getStoredPin() {
-            return localStorage.getItem('horizon_pin') || '1234';
+        // Vistorias & Pendências
+        let pendenciasData = JSON.parse(localStorage.getItem('horizon_pendencias')) || [
+            { id: 1, local: "Barrilete laje", ref: "BARRILETE", prob: "Tampa da caixa d'água com puxador para dentro", status: "OK", inicio: "21/10/2024", termino: "25/10/2024" },
+            { id: 2, local: "Barrilete laje", ref: "BARRILETE", prob: "Acesso sem suporte de apoio", status: "OK", inicio: "21/10/2024", termino: "24/10/2024" },
+            { id: 3, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de pintura na parede", status: "OK", inicio: "21/10/2024", termino: "26/10/2024" },
+            { id: 4, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de calha", status: "OK", inicio: "21/10/2024", termino: "25/10/2024" },
+            { id: 5, local: "Barrilete laje", ref: "BARRILETE", prob: "Antena coletiva sem aterramento", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 6, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Sem esquadria", status: "OK", inicio: "21/10/2024", termino: "28/10/2024" },
+            { id: 7, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Aterramento solto", status: "OK", inicio: "21/10/2024", termino: "25/10/2024" },
+            { id: 8, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Limpeza do equipamento", status: "OK", inicio: "21/10/2024", termino: "22/10/2024" },
+            { id: 9, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "PCF não fecha", status: "OK", inicio: "21/10/2024", termino: "23/10/2024" },
+            { id: 10, local: "Barrilete interno", ref: "BARRILETE", prob: "Porta sem maçaneta e regulagem da esquadria solta e vedação", status: "OK", inicio: "21/10/2024", termino: "29/10/2024" },
+            { id: 11, local: "Barrilete externo", ref: "BARRILETE", prob: "Verificar teste de estanqueidade geral", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 12, local: "24º andar A", ref: "PCF", prob: "PCF regulagem", status: "OK", inicio: "21/10/2024", termino: "24/10/2024" },
+            { id: 13, local: "24º andar", ref: "SHAFT HIDRÁULICA", prob: "Possível vazamento final 2", status: "OK", inicio: "21/10/2024", termino: "25/10/2024" },
+            { id: 14, local: "24º andar", ref: "ÁREA DE RESGATE", prob: "Revisão na pintura", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 15, local: "Salão de festa", ref: "COZINHA", prob: "Cooktop não está ligado", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 16, local: "Fitness", ref: "ACADEMIA", prob: "Borracha solta em frente a primeira esteira", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 17, local: "Brinquedoteca", ref: "BRINQUEDOTECA", prob: "Janela com os vidros riscados", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 18, local: "Coworking", ref: "COWORKING", prob: "Trinca na parede", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 19, local: "Piscina adulto", ref: "PISCINA", prob: "Falta rejunte", status: "PENDENTE", inicio: "21/10/2024", termino: "" },
+            { id: 20, local: "Térreo", ref: "PORTARIA", prob: "Porta blindada não fecha", status: "OK", inicio: "21/10/2024", termino: "22/10/2024" }
+        ];
+
+        // Prestação de Contas
+        let accountsData = JSON.parse(localStorage.getItem('horizon_accounts')) || [
+            { id: 1, name: "Conta Ordinária", competencia: "Setembro/2026", type: "credor", value: 11928.56 },
+            { id: 2, name: "Fundo de Reserva", competencia: "Setembro/2026", type: "credor", value: 107882.17 },
+            { id: 3, name: "Benfeitorias", competencia: "Setembro/2026", type: "credor", value: 9591.62 },
+            { id: 4, name: "I.P.T.U.", competencia: "Setembro/2026", type: "devedor", value: 2139.01 },
+            { id: 5, name: "Conta Ordinária", competencia: "Outubro/2026", type: "credor", value: 13500.00 },
+            { id: 6, name: "Fundo de Reserva", competencia: "Outubro/2026", type: "credor", value: 109200.00 },
+            { id: 7, name: "Benfeitorias", competencia: "Outubro/2026", type: "credor", value: 9591.62 },
+            { id: 8, name: "I.P.T.U.", competencia: "Outubro/2026", type: "devedor", value: 1950.00 }
+        ];
+
+        // Plano de Ação
+        let acoesData = JSON.parse(localStorage.getItem('horizon_acoes')) || [
+            { id: 1, desc: "Status e progressão do laudo dos elevadores", prioridade: "M", resp: "Síndico", inicio: "01/04/2025", termino: "25/06/2025", comentario: "Concluído no dia 25/06/2025", status: "Concluida" },
+            { id: 2, desc: "Avaliação Instalações Elétricas e de quadros", prioridade: "M", resp: "Síndico", inicio: "15/05/2025", termino: "30/07/2025", comentario: "Reparo feito no quadro de bombas", status: "Concluída" },
+            { id: 3, desc: "Infiltração da piscina/pisos da garagem - Defeito de Obra", prioridade: "A", resp: "Trisul / Sinco", inicio: "01/03/2025", termino: "30/04/2025", comentario: "Chamados abertos. Votação de laudo técnico", status: "Concluida" },
+            { id: 4, desc: "Alagamentos de recepção e garagem nas chuvas fortes", prioridade: "A", resp: "Trisul / Sinco", inicio: "15/03/2025", termino: "13/10/2025", comentario: "Trisul apresentou projeto para resolução", status: "Em Andamento" },
+            { id: 5, desc: "Instalação de tela nos elevadores", prioridade: "B", resp: "Síndico", inicio: "01/07/2026", termino: "", comentario: "Aguardando instalação", status: "Em Andamento" },
+            { id: 6, desc: "Instalação de carregadores veiculares (SAVE)", prioridade: "M", resp: "Síndico", inicio: "10/06/2026", termino: "", comentario: "Aguardando assembleia para aprovação e escolha", status: "Em Andamento" }
+        ];
+
+        // Sugestões & Benfeitorias
+        let sugestoesData = JSON.parse(localStorage.getItem('horizon_sugestoes')) || [
+            { id: 1, title: "Cobertura na Rampa de Acesso", desc: "Instalar policarbonato na rampa principal para evitar escorregamentos em dias de chuva forte.", cost: 12500, priority: "Alta", status: "Em Análise" },
+            { id: 2, title: "Automação de Portões por TAG Veicular", desc: "Substituir controles remotos convencionais por TAGs UHF de longo alcance para agilizar entrada na garagem.", cost: 8400, priority: "Média", status: "Aprovada" },
+            { id: 3, title: "Paisagismo no Pet Place", desc: "Adicionar bebedouro automático e grama sintética dedicada na área dos pets.", cost: 3200, priority: "Baixa", status: "Proposta" }
+        ];
+
+        // --- NAVIGATION TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            event.currentTarget.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+            event.currentTarget.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+
+            if(tabId === 'dashboard') updateDashboard();
+            if(tabId === 'acoes') renderAcoesTable();
+            if(tabId === 'pendencias') renderTable();
+            if(tabId === 'contas') initCompetenciaSelector();
+            if(tabId === 'sugestoes') renderSugestoes();
         }
 
-        function secureAction(callback) {
-            pendingAction = callback;
+        function updateGlobalReference(val) {
+            globalRefMonth = val;
+            localStorage.setItem('horizon_global_ref', val);
+            showToast(`Referência global atualizada para: ${val}`);
+        }
+
+        // --- SECURITY PIN CHECKER ---
+        function secureAction(actionCallback) {
+            pendingAction = actionCallback;
             document.getElementById('pin-input').value = "";
             document.getElementById('modal-pin').classList.remove('hidden');
             setTimeout(() => document.getElementById('pin-input').focus(), 100);
         }
 
         function verifyPin() {
-            const pin = document.getElementById('pin-input').value;
-            const correctPin = getStoredPin();
-            if(pin === correctPin) {
+            const entered = document.getElementById('pin-input').value;
+            if(entered === adminPin) {
                 closeModal('modal-pin');
-                showToast("Acesso autorizado!");
                 if(pendingAction) {
                     pendingAction();
                     pendingAction = null;
                 }
             } else {
-                showToast("Senha incorreta!", "error");
+                alert("Senha incorreta! A senha padrão é 1234.");
                 document.getElementById('pin-input').value = "";
-                document.getElementById('pin-input').focus();
             }
         }
 
         function openSettingsModal() {
-            document.getElementById('set-current-pin').value = '';
-            document.getElementById('set-new-pin').value = '';
-            document.getElementById('set-confirm-pin').value = '';
-            document.getElementById('modal-settings').classList.remove('hidden');
+            secureAction(() => {
+                document.getElementById('new-pin').value = "";
+                document.getElementById('modal-settings').classList.remove('hidden');
+            });
         }
 
         function saveNewPin() {
-            const current = document.getElementById('set-current-pin').value;
-            const newPin = document.getElementById('set-new-pin').value;
-            const confirmPin = document.getElementById('set-confirm-pin').value;
-            const correctPin = getStoredPin();
-
-            if(current !== correctPin) {
-                showToast("Senha atual incorreta!", "error");
-                return;
+            const newPin = document.getElementById('new-pin').value.trim();
+            if(newPin.length === 4 && !isNaN(newPin)) {
+                adminPin = newPin;
+                localStorage.setItem('horizon_pin', newPin);
+                closeModal('modal-settings');
+                showToast("Senha administrativa alterada com sucesso!");
+            } else {
+                alert("A senha deve conter exatamente 4 dígitos numéricos.");
             }
-            if(!newPin || newPin.length !== 4 || isNaN(newPin)) {
-                showToast("A nova senha deve ter exatamente 4 números.", "error");
-                return;
-            }
-            if(newPin !== confirmPin) {
-                showToast("A confirmação da nova senha não confere.", "error");
-                return;
-            }
-
-            localStorage.setItem('horizon_pin', newPin);
-            closeModal('modal-settings');
-            showToast("Senha alterada com sucesso!");
         }
 
-        // Initial Plano de Ação Data from PDF
-        let planoData = JSON.parse(localStorage.getItem('horizon_plano')) || [
-            { id: 1, acao: "Status e progressão do laudo dos elevadores", prio: "M", resp: "Síndico", inicio: "01/04/2025", termino: "25/06/2025", comentario: "Aguardando relatório do status das etapas executadas - Concluído em 25/06/2025", status: "Concluida" },
-            { id: 2, acao: "Avaliação Instalações Elétricas e de quadros", prio: "M", resp: "Síndico", inicio: "15/05/2025", termino: "30/07/2025", comentario: "Foi feito reparo no quadro de bombas no dia 23/07/2025", status: "Concluida" },
-            { id: 3, acao: "Substituição do Prestador do Serviço de Jardinagem", prio: "M", resp: "Síndico", inicio: "01/06/2025", termino: "01/07/2025", comentario: "Contratada a empresa Alexandre Jardinagem após avaliar propostas.", status: "Concluida" },
-            { id: 4, acao: "Revisão dos contratos com prestadores de serviços", prio: "A", resp: "Síndico", inicio: "20/03/2025", termino: "01/05/2025", comentario: "Revisados todos os contratos", status: "Concluida" },
-            { id: 5, acao: "Reposição de Piso tátil e substituição de tapetes antigos", prio: "A", resp: "Síndico", inicio: "15/06/2025", termino: "30/06/2025", comentario: "Tapetes novos colocados nas entradas sociais, de serviço e piscina.", status: "Concluida" },
-            { id: 6, acao: "Implantação de Checklists de higienização de sanitários e áreas comuns", prio: "M", resp: "Síndico", inicio: "16/06/2025", termino: "17/06/2025", comentario: "Treinamento e orientação do zelador e equipe de limpeza.", status: "Concluida" },
-            { id: 7, acao: "Implantação de POPs e verificação diária de consumo (água, luz, gás)", prio: "M", resp: "Síndico", inicio: "16/06/2025", termino: "20/06/2025", comentario: "Treinamento permanente com porteiros e zelador.", status: "Concluida" },
-            { id: 8, acao: "Aquisição de lixeiras para salas de resíduos dos andares (orgânico/reciclável)", prio: "M", resp: "Síndico", inicio: "10/05/2025", termino: "20/05/2025", comentario: "Lixeiras identificadas colocadas em todos os andares.", status: "Concluida" },
-            { id: 9, acao: "Recuperação dos jardins externos e internos", prio: "M", resp: "Síndico", inicio: "01/06/2025", termino: "30/07/2026", comentario: "Substituição de plantas, compra de adubos e terra.", status: "Concluida" },
-            { id: 10, acao: "Infiltração da piscina / pisos da garagem (Defeito de Obra)", prio: "A", resp: "Trisul / Sinco", inicio: "01/03/2025", termino: "30/04/2025", comentario: "Chamados abertos na Trisul / Sinco.", status: "Concluida" },
-            { id: 11, acao: "Alagamentos de recepção e garagem nas chuvas fortes", prio: "A", resp: "Trisul / Sinco", inicio: "15/03/2025", termino: "13/10/2025", comentario: "Trisul apresentou projeto para resolução. Monitorando.", status: "Em Andamento" },
-            { id: 12, acao: "Diversas falhas estruturais (infiltrações, rachaduras, vazamentos)", prio: "A", resp: "Trisul / Sinco", inicio: "25/07/2025", termino: "-", comentario: "Realizado laudo por parte do condomínio. Acompanhando junto à Sinco.", status: "Em Andamento" },
-            { id: 13, acao: "Envio de Notificação Extrajudicial para Trisul e Sinco", prio: "A", resp: "Síndico", inicio: "04/08/2025", termino: "05/08/2025", comentario: "Notificação Extrajudicial enviada em 05/08/2025", status: "Concluida" },
-            { id: 14, acao: "Higienização das Caixas d'água e dedetização", prio: "A", resp: "Síndico", inicio: "07/05/2025", termino: "10/05/2025", comentario: "Higienização realizada pela desentupidora Jardim Sul (cortesia).", status: "Concluida" },
-            { id: 15, acao: "Contratar manutenção da Piscina", prio: "B", resp: "Síndico", inicio: "08/05/2025", termino: "15/05/2025", comentario: "Limpeza passou a ser atribuição do zelador (redução de custos).", status: "Concluida" },
-            { id: 16, acao: "Liberação do uso da exaustão nas churrasqueiras", prio: "A", resp: "Síndico", inicio: "28/07/2025", termino: "13/10/2026", comentario: "Sinco constatou bloqueio no duto; problema solucionado após intervenção.", status: "Concluida" },
-            { id: 17, acao: "Nível de ruído externo (ar do hospital) para finais 2 e 3", prio: "B", resp: "Síndico", inicio: "14/05/2025", termino: "-", comentario: "Hospital em levantamento técnico para solução.", status: "Em Andamento" },
-            { id: 18, acao: "Local para recepção de encomendas e entregas (Ex: iFood)", prio: "M", resp: "Síndico", inicio: "30/07/2025", termino: "28/08/2026", comentario: "Apresentado e aprovado em Assembleia.", status: "Concluida" },
-            { id: 19, acao: "Instalação de câmeras Fase 2 e automação de portões", prio: "A", resp: "Síndico", inicio: "09/06/2025", termino: "30/09/2025", comentario: "Instalação de câmeras iniciada em 14/07/2025.", status: "Concluida" },
-            { id: 20, acao: "Troca de posição do portão interno de veículos do 1º SS", prio: "M", resp: "Síndico", inicio: "09/06/2025", termino: "18/07/2025", comentario: "Iniciado após aprovação em Assembleia.", status: "Concluida" },
-            { id: 21, acao: "Fragilidades no Controle de acesso (FortServ)", prio: "A", resp: "Síndico", inicio: "22/05/2025", termino: "06/06/2025", comentario: "Reunião realizada com fornecedor sinalizando baixa qualidade.", status: "Concluida" },
-            { id: 22, acao: "Definição de Regulamento Interno para áreas comuns", prio: "M", resp: "Comissão", inicio: "14/07/2025", termino: "28/02/2026", comentario: "Regimento interno provisório em vigência para posterior definitivo.", status: "Em Andamento" },
-            { id: 23, acao: "Oxxo perfurações nas lajes de garagem sem autorização", prio: "A", resp: "Síndico", inicio: "01/03/2025", termino: "-", comentario: "Oxxo assumiu responsabilidade pela correção. Aguardando reparos.", status: "Em Andamento" },
-            { id: 24, acao: "AVCB vence em 30/04/2025", prio: "A", resp: "Síndico", inicio: "30/05/2025", termino: "30/08/2025", comentario: "Aguardando visita dos bombeiros para emissão.", status: "Concluida" },
-            { id: 25, acao: "Instalação de tela nos elevadores", prio: "B", resp: "Síndico", inicio: "01/07/2026", termino: "-", comentario: "Aguardando instalação.", status: "Em Andamento" },
-            { id: 26, acao: "Intervenção Sinco (entrada de água sala transformador)", prio: "A", resp: "Síndico", inicio: "14/10/2026", termino: "-", comentario: "Aguardando plano de ação da Sinco.", status: "Em Andamento" },
-            { id: 27, acao: "Instalação de carregadores veiculares (SAVE)", prio: "M", resp: "Síndico", inicio: "10/06/2026", termino: "-", comentario: "Aguardando assembleia para aprovação e escolha da empresa.", status: "Em Andamento" }
-        ];
+        // --- DASHBOARD RENDERER ---
+        function updateDashboard() {
+            document.getElementById('kpi-total').innerText = pendenciasData.length;
+            document.getElementById('kpi-ok').innerText = pendenciasData.filter(i => i.status === 'OK').length;
 
-        let pendenciasData = JSON.parse(localStorage.getItem('horizon_pendencias')) || [
-            { id: 1, local: "Barrilete laje", ref: "BARRILETE", prob: "Tampa da caixa d'água com puxador para dentro", status: "OK" },
-            { id: 2, local: "Barrilete laje", ref: "BARRILETE", prob: "Acesso sem suporte de apoio", status: "OK" },
-            { id: 3, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de pintura na parede", status: "OK" },
-            { id: 4, local: "Barrilete laje", ref: "BARRILETE", prob: "Revisão de calha", status: "OK" },
-            { id: 5, local: "Barrilete laje", ref: "BARRILETE", prob: "Antena coletiva sem aterramento", status: "PENDENTE" },
-            { id: 6, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Sem esquadria", status: "OK" },
-            { id: 7, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Aterramento solto", status: "OK" },
-            { id: 8, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "Limpeza do equipamento", status: "OK" },
-            { id: 9, local: "Casa de bombas incêndio", ref: "CASA DE BOMBA", prob: "PCF não fecha", status: "OK" },
-            { id: 10, local: "Barrilete interno", ref: "BARRILETE", prob: "Porta sem maçaneta e regulagem da esquadria solta e vedação", status: "OK" },
-            { id: 11, local: "Barrilete externo", ref: "BARRILETE", prob: "Verificar teste de estanqueidade geral", status: "PENDENTE" },
-            { id: 12, local: "24º andar A", ref: "PCF", prob: "PCF regulagem", status: "OK" },
-            { id: 13, local: "24º andar", ref: "SHAFT HIDRÁULICA", prob: "Possível vazamento final 2", status: "OK" },
-            { id: 14, local: "24º andar", ref: "ÁREA DE RESGATE", prob: "Revisão na pintura", status: "PENDENTE" },
-            { id: 15, local: "Salão de festa", ref: "COZINHA", prob: "Cooktop não está ligado", status: "PENDENTE" },
-            { id: 16, local: "Fitness", ref: "ACADEMIA", prob: "Borracha solta em frente a primeira esteira", status: "PENDENTE" },
-            { id: 17, local: "Brinquedoteca", ref: "BRINQUEDOTECA", prob: "Janela com os vidros riscados", status: "PENDENTE" },
-            { id: 18, local: "Coworking", ref: "COWORKING", prob: "Trinca na parede", status: "PENDENTE" },
-            { id: 19, local: "Piscina adulto", ref: "PISCINA", prob: "Falta rejunte", status: "PENDENTE" },
-            { id: 20, local: "Térreo", ref: "PORTARIA", prob: "Porta blindada não fecha", status: "OK" }
-        ];
-
-        let accountsData = JSON.parse(localStorage.getItem('horizon_accounts')) || [
-            { id: 'acc_1', competencia: '2026-09', name: "Conta Ordinária", type: "credor", value: 11928.56, icon: "fa-piggy-bank" },
-            { id: 'acc_2', competencia: '2026-09', name: "Fundo de Reserva", type: "credor", value: 107882.17, icon: "fa-shield-halved" },
-            { id: 'acc_3', competencia: '2026-09', name: "Benfeitorias", type: "credor", value: 9591.62, icon: "fa-hammer" },
-            { id: 'acc_4', competencia: '2026-09', name: "I.P.T.U.", type: "devedor", value: 2139.01, icon: "fa-file-invoice-dollar" },
-            { id: 'acc_5', competencia: '2026-10', name: "Conta Ordinária", type: "credor", value: 15400.00, icon: "fa-piggy-bank" },
-            { id: 'acc_6', competencia: '2026-10', name: "Fundo de Reserva", type: "credor", value: 109500.00, icon: "fa-shield-halved" },
-            { id: 'acc_7', competencia: '2026-10', name: "Benfeitorias", type: "credor", value: 9591.62, icon: "fa-hammer" },
-            { id: 'acc_8', competencia: '2026-10', name: "I.P.T.U.", type: "devedor", value: 1850.00, icon: "fa-file-invoice-dollar" }
-        ];
-
-        let sugestoesData = JSON.parse(localStorage.getItem('horizon_sugestoes')) || [
-            { id: 1, titulo: "Instalação de Placas Fotovoltaicas no Telhado", categoria: "Sustentabilidade", prioridade: "Alta", custo: 45000, status: "Em Análise", desc: "Projeto para redução de custo de energia das áreas comuns." },
-            { id: 2, titulo: "Modernização da Academia com Novos Aparelhos", categoria: "Lazer & Bem-estar", prioridade: "Média", custo: 18000, status: "Aprovada", desc: "Substituição de esteiras e inclusão de kit de halteres." },
-            { id: 3, titulo: "Reforço na Iluminação LED da Garagem", categoria: "Segurança & Manutenção", prioridade: "Urgente", custo: 6500, status: "Em Execução", desc: "Atender vistorias e melhorar visibilidade nas vagas do 1º SS." }
-        ];
-
-        let globalRefMonth = localStorage.getItem('horizon_global_ref') || '2026-10';
-
-        function updateGlobalReference(val) {
-            globalRefMonth = val;
-            localStorage.setItem('horizon_global_ref', val);
-            const formatted = formatMonthYear(val);
-            document.getElementById('dash-badge-ref').innerText = `Relatório Executivo Consolidado - Ref. ${formatted}`;
-            document.getElementById('energia-ref-label').innerText = formatted;
-            document.getElementById('finance-month-filter').value = val;
-            renderAccounts();
-            renderSugestoes();
-            renderPlano();
+            // Calc saldo for current selected or default competencia
+            const compSelect = document.getElementById('competencia-filter');
+            const comp = compSelect ? compSelect.value : (accountsData[0]?.competencia || "Outubro/2026");
             
-            showToast(`Mês de Referência Global atualizado para ${formatted}`);
+            const filteredAccs = accountsData.filter(a => a.competencia === comp);
+            let credor = filteredAccs.filter(a => a.type === 'credor').reduce((acc, curr) => acc + curr.value, 0);
+            let devedor = filteredAccs.filter(a => a.type === 'devedor').reduce((acc, curr) => acc + curr.value, 0);
+            let liquido = credor - devedor;
+
+            document.getElementById('kpi-saldo').innerText = formatMoney(liquido);
+            document.getElementById('kpi-saldo-mes').innerText = `Ref: ${comp}`;
+
+            // Ações summary
+            const acoesSum = document.getElementById('dashboard-acoes-summary');
+            const concluidas = acoesData.filter(a => a.status === 'Concluida').length;
+            const emAndamento = acoesData.filter(a => a.status === 'Em Andamento').length;
+            acoesSum.innerHTML = `
+                <div class="flex justify-between items-center text-xs p-3 bg-slate-900/50 rounded-xl border border-slate-700">
+                    <span class="text-slate-300">Total de Ações no Plano</span>
+                    <span class="font-bold text-white">${acoesData.length}</span>
+                </div>
+                <div class="flex justify-between items-center text-xs p-3 bg-slate-900/50 rounded-xl border border-slate-700">
+                    <span class="text-emerald-400">Ações Concluídas</span>
+                    <span class="font-bold text-emerald-400">${concluidas}</span>
+                </div>
+                <div class="flex justify-between items-center text-xs p-3 bg-slate-900/50 rounded-xl border border-slate-700">
+                    <span class="text-amber-400">Em Andamento / Monitoramento</span>
+                    <span class="font-bold text-amber-400">${emAndamento}</span>
+                </div>
+            `;
+
+            // Contas summary
+            const contasSum = document.getElementById('dashboard-contas-summary');
+            contasSum.innerHTML = `
+                <div class="flex justify-between items-center text-xs p-3 bg-slate-900/50 rounded-xl border border-slate-700">
+                    <span class="text-slate-300">Total de Entradas / Saldos Credores</span>
+                    <span class="font-bold text-emerald-400">+ ${formatMoney(credor)}</span>
+                </div>
+                <div class="flex justify-between items-center text-xs p-3 bg-slate-900/50 rounded-xl border border-slate-700">
+                    <span class="text-slate-300">Total de Saídas / Saldos Devedores</span>
+                    <span class="font-bold text-rose-400">- ${formatMoney(devedor)}</span>
+                </div>
+                <div class="flex justify-between items-center text-xs p-3 bg-indigo-950/40 rounded-xl border border-indigo-500/30">
+                    <span class="font-bold text-indigo-300">Valor Líquido em Caixa</span>
+                    <span class="font-bold text-indigo-300 text-sm">${formatMoney(liquido)}</span>
+                </div>
+            `;
         }
 
-        function formatMonthYear(ymString) {
-            if(!ymString) return '';
-            const [year, month] = ymString.split('-');
-            const months = {
-                '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril',
-                '05': 'Maio', '06': 'Junho', '07': 'Julho', '08': 'Agosto',
-                '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
-            };
-            return `${months[month] || month} / ${year}`;
-        }
-
-        // UI Tabs Switching
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-200/60 flex items-center space-x-2 cursor-pointer";
-            });
-            document.getElementById(`btn-${tabId}`).className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-sm flex items-center space-x-2 cursor-pointer";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Render Plano de Ação Table
-        function renderPlano(dataToRender = planoData) {
-            const tbody = document.getElementById('plano-table-body');
+        // --- PLANO DE AÇÃO LOGIC ---
+        function renderAcoesTable(data = acoesData) {
+            const tbody = document.getElementById('acoes-tbody');
             tbody.innerHTML = '';
 
-            dataToRender.forEach((item) => {
-                let statusBadge = 'bg-slate-100 text-slate-700';
-                if(item.status === 'Concluida') statusBadge = 'bg-emerald-100 text-emerald-800';
-                else if(item.status === 'Em Andamento') statusBadge = 'bg-indigo-100 text-indigo-800';
-                else if(item.status === 'Atrasada') statusBadge = 'bg-rose-100 text-rose-800';
+            data.forEach(item => {
+                let badgeColor = 'bg-slate-700 text-slate-300';
+                if(item.status === 'Concluida') badgeColor = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                if(item.status === 'Em Andamento') badgeColor = 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                if(item.status === 'Atrasada') badgeColor = 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+
+                let prioColor = item.priority === 'A' ? 'text-rose-400 font-bold' : (item.priority === 'M' ? 'text-amber-400' : 'text-slate-400');
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
+                tr.className = "hover:bg-slate-900/40 transition";
                 tr.innerHTML = `
-                    <td class="p-4 font-medium text-slate-900">${item.acao}</td>
-                    <td class="p-4 font-mono font-bold text-center">${item.prio}</td>
-                    <td class="p-4 text-slate-600">${item.resp}</td>
-                    <td class="p-4 text-slate-500 whitespace-nowrap">${item.inicio || '-'}</td>
-                    <td class="p-4 text-slate-500 whitespace-nowrap">${item.termino || '-'}</td>
-                    <td class="p-4 text-slate-600 max-w-xs">${item.comentario || '-'}</td>
-                    <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${statusBadge}">${item.status}</span></td>
+                    <td class="p-4 font-medium text-white max-w-xs">${item.desc}</td>
+                    <td class="p-4"><span class="${prioColor}">${item.prioridade}</span></td>
+                    <td class="p-4 text-slate-300">${item.resp}</td>
+                    <td class="p-4 text-slate-400 whitespace-nowrap">${item.inicio || '-'} até ${item.termino || 'Pendente'}</td>
+                    <td class="p-4 text-slate-300 max-w-xs truncate">${item.comentario || '-'}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeColor}">${item.status}</span></td>
                     <td class="p-4 text-center space-x-2 whitespace-nowrap">
-                        <button onclick="secureAction(() => editPlano(${item.id}))" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="secureAction(() => deletePlano(${item.id}))" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="secureAction(() => editAcao(${item.id}))" title="Editar" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="secureAction(() => deleteAcao(${item.id}))" title="Excluir" class="text-rose-400 hover:text-rose-300 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-
-            document.getElementById('kpi-plano-total').innerText = planoData.length;
-
-            // Dashboard highlights (latest 3)
-            const highlightsContainer = document.getElementById('dashboard-plano-highlights');
-            highlightsContainer.innerHTML = '';
-            planoData.slice(0, 3).forEach(p => {
-                highlightsContainer.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
-                        <span class="text-xs font-medium text-slate-700 truncate max-w-[240px]">${p.acao}</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg ${p.status === 'Concluida' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${p.status}</span>
-                    </div>
-                `;
-            });
-
-            localStorage.setItem('horizon_plano', JSON.stringify(planoData));
+            localStorage.setItem('horizon_acoes', JSON.stringify(acoesData));
         }
 
-        function filterPlano() {
-            const query = document.getElementById('search-plano').value.toLowerCase();
-            const statusFilter = document.getElementById('filter-plano-status').value;
-
-            const filtered = planoData.filter(item => {
-                const matchQuery = item.acao.toLowerCase().includes(query) || item.resp.toLowerCase().includes(query) || item.comentario.toLowerCase().includes(query);
-                const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
-                return matchQuery && matchStatus;
-            });
-
-            renderPlano(filtered);
+        function filterAcoes() {
+            const query = document.getElementById('search-acoes').value.toLowerCase();
+            const filtered = acoesData.filter(i => i.desc.toLowerCase().includes(query) || i.resp.toLowerCase().includes(query));
+            renderAcoesTable(filtered);
         }
 
-        // Plano Modal management
-        function openAddPlanoModal() {
-            document.getElementById('plano-modal-title').innerText = "Nova Ação do Plano";
-            document.getElementById('plano-edit-id').value = "";
-            document.getElementById('p-acao').value = "";
-            document.getElementById('p-prio').value = "M";
-            document.getElementById('p-resp').value = "Síndico";
-            document.getElementById('p-inicio').value = "";
-            document.getElementById('p-termino').value = "";
-            document.getElementById('p-comentario').value = "";
-            document.getElementById('p-status').value = "Em Andamento";
-            document.getElementById('modal-plano').classList.remove('hidden');
+        function openAddAcaoModal() {
+            document.getElementById('modal-acao-title').innerText = "Nova Ação do Plano";
+            document.getElementById('edit-acao-id').value = "";
+            document.getElementById('ac-desc').value = "";
+            document.getElementById('ac-prioridade').value = "M";
+            document.getElementById('ac-resp').value = "Síndico";
+            document.getElementById('ac-inicio').value = "";
+            document.getElementById('ac-termino').value = "";
+            document.getElementById('ac-comentario').value = "";
+            document.getElementById('ac-status').value = "Em Andamento";
+            document.getElementById('modal-acao').classList.remove('hidden');
         }
 
-        function editPlano(id) {
-            const item = planoData.find(p => p.id === id);
+        function editAcao(id) {
+            const item = acoesData.find(i => i.id === id);
             if(item) {
-                document.getElementById('plano-modal-title').innerText = `Editar Ação #${id}`;
-                document.getElementById('plano-edit-id').value = item.id;
-                document.getElementById('p-acao').value = item.acao;
-                document.getElementById('p-prio').value = item.prio;
-                document.getElementById('p-resp').value = item.resp;
-                document.getElementById('p-inicio').value = item.inicio;
-                document.getElementById('p-termino').value = item.termino;
-                document.getElementById('p-comentario').value = item.comentario;
-                document.getElementById('p-status').value = item.status;
-                document.getElementById('modal-plano').classList.remove('hidden');
+                document.getElementById('modal-acao-title').innerText = `Editar Ação #${id}`;
+                document.getElementById('edit-acao-id').value = id;
+                document.getElementById('ac-desc').value = item.desc;
+                document.getElementById('ac-prioridade').value = item.prioridade;
+                document.getElementById('ac-resp').value = item.resp;
+                document.getElementById('ac-inicio').value = item.inicio || "";
+                document.getElementById('ac-termino').value = item.termino || "";
+                document.getElementById('ac-comentario').value = item.comentario || "";
+                document.getElementById('ac-status').value = item.status;
+                document.getElementById('modal-acao').classList.remove('hidden');
             }
         }
 
-        function savePlano() {
-            const editId = document.getElementById('plano-edit-id').value;
-            const acao = document.getElementById('p-acao').value.trim();
-            const prio = document.getElementById('p-prio').value;
-            const resp = document.getElementById('p-resp').value.trim();
-            const inicio = document.getElementById('p-inicio').value.trim();
-            const termino = document.getElementById('p-termino').value.trim();
-            const comentario = document.getElementById('p-comentario').value.trim();
-            const status = document.getElementById('p-status').value;
+        function saveAcao() {
+            const id = document.getElementById('edit-acao-id').value;
+            const desc = document.getElementById('ac-desc').value.trim();
+            const prioridade = document.getElementById('ac-prioridade').value;
+            const resp = document.getElementById('ac-resp').value.trim();
+            const inicio = document.getElementById('ac-inicio').value.trim();
+            const termino = document.getElementById('ac-termino').value.trim();
+            const comentario = document.getElementById('ac-comentario').value.trim();
+            const status = document.getElementById('ac-status').value;
 
-            if(!acao || !resp) {
-                alert("Preencha a ação e o responsável.");
-                return;
-            }
+            if(!desc) { alert("Preencha a descrição da ação."); return; }
 
-            if(!editId) {
-                const newId = planoData.length > 0 ? Math.max(...planoData.map(p => p.id)) + 1 : 1;
-                planoData.unshift({ id: newId, acao, prio, resp, inicio, termino, comentario, status });
-                showToast("Ação adicionada ao Plano com sucesso!");
+            if(!id) {
+                const newId = acoesData.length > 0 ? Math.max(...acoesData.map(i => i.id)) + 1 : 1;
+                acoesData.unshift({ id: newId, desc, prioridade, resp, inicio, termino, comentario, status });
+                showToast("Ação adicionada ao plano com sucesso!");
             } else {
-                const item = planoData.find(p => p.id == editId);
+                const item = acoesData.find(i => i.id == id);
                 if(item) {
-                    item.acao = acao;
-                    item.prio = prio;
+                    item.desc = desc;
+                    item.prioridade = prioridade;
                     item.resp = resp;
                     item.inicio = inicio;
                     item.termino = termino;
@@ -1038,344 +977,84 @@
                     showToast("Ação atualizada com sucesso!");
                 }
             }
-
-            closeModal('modal-plano');
-            renderPlano();
+            closeModal('modal-acao');
+            renderAcoesTable();
         }
 
-        function deletePlano(id) {
+        function deleteAcao(id) {
             if(confirm("Deseja realmente excluir esta ação do plano?")) {
-                planoData = planoData.filter(p => p.id !== id);
-                renderPlano();
-                showToast("Ação excluída com sucesso!", "error");
+                acoesData = acoesData.filter(i => i.id !== id);
+                renderAcoesTable();
+                showToast("Ação removida.");
             }
         }
 
-        // Render Pendencias Table
+        // --- VISTORIAS & PENDÊNCIAS LOGIC ---
         function renderTable(dataToRender = pendenciasData) {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
             dataToRender.forEach((item) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
+                tr.className = "hover:bg-slate-900/40 transition";
                 tr.innerHTML = `
-                    <td class="p-4 font-mono font-semibold text-slate-500">#${item.id}</td>
-                    <td class="p-4 font-medium text-slate-900">${item.local}</td>
-                    <td class="p-4"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono text-[11px]">${item.ref}</span></td>
-                    <td class="p-4 text-slate-600 max-w-xs truncate">${item.prob}</td>
+                    <td class="p-4 font-mono font-semibold text-slate-400">#${item.id}</td>
+                    <td class="p-4 font-medium text-white">${item.local}</td>
+                    <td class="p-4"><span class="bg-slate-900 text-slate-300 px-2 py-0.5 rounded font-mono text-[11px] border border-slate-700">${item.ref}</span></td>
+                    <td class="p-4 text-slate-300 max-w-xs truncate">${item.prob}</td>
+                    <td class="p-4 text-slate-400 whitespace-nowrap">${item.inicio || '-'}</td>
+                    <td class="p-4 text-slate-400 whitespace-nowrap">${item.termino || '-'}</td>
                     <td class="p-4">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${item.status === 'OK' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${item.status === 'OK' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
                             ${item.status}
                         </span>
                     </td>
-                    <td class="p-4 text-center space-x-2">
-                        <button onclick="secureAction(() => toggleStatus(${item.id}))" title="Alternar Status" class="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
-                        <button onclick="secureAction(() => editPendencia(${item.id}))" title="Editar" class="text-slate-500 hover:text-slate-800 p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="secureAction(() => deletePendencia(${item.id}))" title="Excluir" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                        <button onclick="secureAction(() => toggleStatus(${item.id}))" title="Alternar Status" class="text-indigo-400 hover:text-indigo-300 p-1 cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="secureAction(() => editPendencia(${item.id}))" title="Editar" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="secureAction(() => deletePendencia(${item.id}))" title="Excluir" class="text-rose-400 hover:text-rose-300 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('kpi-total').innerText = pendenciasData.length;
-            document.getElementById('kpi-ok').innerText = pendenciasData.filter(i => i.status === 'OK').length;
-
             localStorage.setItem('horizon_pendencias', JSON.stringify(pendenciasData));
         }
 
-        // Render Finance Accounts based on selected Competência
-        function renderAccounts() {
-            const selectedMonth = document.getElementById('finance-month-filter').value;
-            const grid = document.getElementById('accounts-grid');
-            grid.innerHTML = '';
-
-            const filteredAccounts = accountsData.filter(acc => acc.competencia === selectedMonth);
-
-            let totalCredor = 0;
-            let totalDevedor = 0;
-
-            filteredAccounts.forEach(acc => {
-                if(acc.type === 'credor') totalCredor += acc.value;
-                else totalDevedor += acc.value;
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <div class="absolute top-0 right-0 p-4 text-slate-300 text-3xl"><i class="fa-solid ${acc.icon || 'fa-wallet'}"></i></div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">${acc.name}</span>
-                        <h3 class="text-2xl font-extrabold ${acc.type === 'credor' ? 'text-emerald-600' : 'text-rose-600'} mt-3">
-                            R$ ${acc.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
-                        </h3>
-                        <p class="text-xs text-slate-500 mt-1 font-medium">${acc.type === 'credor' ? 'Saldo Credor' : 'Saldo Devedor / Passivo'}</p>
-                    </div>
-                    <div class="flex justify-end space-x-2 mt-4 pt-3 border-t border-slate-100">
-                        <button onclick="secureAction(() => editAccount('${acc.id}'))" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded bg-indigo-50 cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
-                        <button onclick="secureAction(() => deleteAccount('${acc.id}'))" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded bg-rose-50 cursor-pointer"><i class="fa-solid fa-trash"></i> Excluir</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            if(filteredAccounts.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center text-slate-500 text-xs">
-                        <i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-400"></i>
-                        <p>Nenhuma conta cadastrada para esta competência (${formatMonthYear(selectedMonth)}). Clique em "Adicionar Conta / Rubrica" para começar.</p>
-                    </div>
-                `;
-            }
-
-            const liquido = totalCredor - totalDevedor;
-            document.getElementById('val-liquido').innerText = `R$ ${liquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('kpi-saldo').innerText = `R$ ${liquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            
-            const monthText = formatMonthYear(selectedMonth);
-            document.getElementById('kpi-competencia-label').innerText = `Ref. ${monthText}`;
-            document.getElementById('box-competencia-badge').innerText = `Competência: ${monthText}`;
-
-            localStorage.setItem('horizon_accounts', JSON.stringify(accountsData));
-        }
-
-        // Render Sugestões & Benfeitorias
-        function renderSugestoes() {
-            const catFilter = document.getElementById('filter-sug-cat').value;
-            const grid = document.getElementById('sugestoes-grid');
-            grid.innerHTML = '';
-
-            const filtered = sugestoesData.filter(item => {
-                return catFilter === 'ALL' || item.categoria === catFilter;
-            });
-
-            filtered.forEach(item => {
-                let badgeColor = 'bg-slate-100 text-slate-700';
-                if(item.status === 'Aprovada') badgeColor = 'bg-emerald-100 text-emerald-800';
-                else if(item.status === 'Em Execução') badgeColor = 'bg-indigo-100 text-indigo-800';
-                else if(item.status === 'Concluída') badgeColor = 'bg-blue-100 text-blue-800';
-                else if(item.status === 'Em Análise') badgeColor = 'bg-amber-100 text-amber-800';
-
-                let prioColor = 'text-slate-600';
-                if(item.prioridade === 'Urgente' || item.prioridade === 'Alta') prioColor = 'text-rose-600 font-bold';
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4";
-                card.innerHTML = `
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg">${item.categoria}</span>
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeColor}">${item.status}</span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-base mt-2">${item.titulo}</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
-                    </div>
-                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                        <div>
-                            <span class="text-slate-400 block text-[10px]">Custo Estimado</span>
-                            <span class="font-bold text-slate-900">R$ ${(item.custo || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 block text-[10px]">Prioridade</span>
-                            <span class="${prioColor}">${item.prioridade}</span>
-                        </div>
-                        <div class="space-x-1">
-                            <button onclick="editSugestao(${item.id})" class="text-slate-500 hover:text-indigo-600 p-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteSugestao(${item.id})" class="text-slate-500 hover:text-rose-600 p-1.5 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center text-slate-500 text-xs">
-                        <i class="fa-solid fa-lightbulb text-2xl mb-2 text-amber-400"></i>
-                        <p>Nenhuma sugestão ou benfeitoria encontrada nesta categoria.</p>
-                    </div>
-                `;
-            }
-
-            localStorage.setItem('horizon_sugestoes', JSON.stringify(sugestoesData));
-        }
-
-        // Sugestao Modal Management
-        function openAddSugestaoModal() {
-            document.getElementById('sugestao-modal-title').innerText = "Nova Sugestão ou Benfeitoria";
-            document.getElementById('sug-edit-id').value = "";
-            document.getElementById('sug-titulo').value = "";
-            document.getElementById('sug-categoria').value = "Sustentabilidade";
-            document.getElementById('sug-prioridade').value = "Média";
-            document.getElementById('sug-custo').value = "";
-            document.getElementById('sug-status').value = "Proposta";
-            document.getElementById('sug-desc').value = "";
-            document.getElementById('modal-sugestao').classList.remove('hidden');
-        }
-
-        function editSugestao(id) {
-            const item = sugestoesData.find(s => s.id === id);
-            if(item) {
-                document.getElementById('sugestao-modal-title').innerText = `Editar Sugestão #${item.id}`;
-                document.getElementById('sug-edit-id').value = item.id;
-                document.getElementById('sug-titulo').value = item.titulo;
-                document.getElementById('sug-categoria').value = item.categoria;
-                document.getElementById('sug-prioridade').value = item.prioridade;
-                document.getElementById('sug-custo').value = item.custo.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                document.getElementById('sug-status').value = item.status;
-                document.getElementById('sug-desc').value = item.desc;
-                document.getElementById('modal-sugestao').classList.remove('hidden');
-            }
-        }
-
-        function saveSugestao() {
-            const editId = document.getElementById('sug-edit-id').value;
-            const titulo = document.getElementById('sug-titulo').value.trim();
-            const categoria = document.getElementById('sug-categoria').value;
-            const prioridade = document.getElementById('sug-prioridade').value;
-            const custo = parseMoney(document.getElementById('sug-custo').value);
-            const status = document.getElementById('sug-status').value;
-            const desc = document.getElementById('sug-desc').value.trim();
-
-            if(!titulo || !desc) {
-                alert("Preencha o título e a descrição da sugestão.");
-                return;
-            }
-
-            if(!editId) {
-                const newId = sugestoesData.length > 0 ? Math.max(...sugestoesData.map(s => s.id)) + 1 : 1;
-                sugestoesData.unshift({ id: newId, titulo, categoria, prioridade, custo, status, desc });
-                showToast("Sugestão adicionada com sucesso!");
-            } else {
-                const item = sugestoesData.find(s => s.id == editId);
-                if(item) {
-                    item.titulo = titulo;
-                    item.categoria = categoria;
-                    item.prioridade = prioridade;
-                    item.custo = custo;
-                    item.status = status;
-                    item.desc = desc;
-                    showToast("Sugestão atualizada com sucesso!");
-                }
-            }
-
-            closeModal('modal-sugestao');
-            renderSugestoes();
-        }
-
-        function deleteSugestao(id) {
-            if(confirm("Deseja remover esta sugestão ou benfeitoria?")) {
-                sugestoesData = sugestoesData.filter(s => s.id !== id);
-                renderSugestoes();
-                showToast("Sugestão removida com sucesso!", "error");
-            }
-        }
-
-        // Account Modal Management
-        function openAddAccountModal() {
-            document.getElementById('account-modal-title').innerText = "Adicionar Nova Conta / Rubrica";
-            document.getElementById('account-edit-id').value = "";
-            document.getElementById('acc-competencia').value = document.getElementById('finance-month-filter').value;
-            document.getElementById('acc-name').value = "";
-            document.getElementById('acc-type').value = "credor";
-            document.getElementById('acc-value').value = "";
-            document.getElementById('modal-account').classList.remove('hidden');
-        }
-
-        function editAccount(id) {
-            const acc = accountsData.find(a => a.id === id);
-            if(acc) {
-                document.getElementById('account-modal-title').innerText = `Editar Conta: ${acc.name}`;
-                document.getElementById('account-edit-id').value = acc.id;
-                document.getElementById('acc-competencia').value = acc.competencia;
-                document.getElementById('acc-name').value = acc.name;
-                document.getElementById('acc-type').value = acc.type;
-                document.getElementById('acc-value').value = acc.value.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                document.getElementById('modal-account').classList.remove('hidden');
-            }
-        }
-
-        function saveAccount() {
-            const editId = document.getElementById('account-edit-id').value;
-            const competencia = document.getElementById('acc-competencia').value;
-            const name = document.getElementById('acc-name').value.trim();
-            const type = document.getElementById('acc-type').value;
-            const value = parseMoney(document.getElementById('acc-value').value);
-            const icon = type === 'credor' ? 'fa-piggy-bank' : 'fa-file-invoice-dollar';
-
-            if(!name) {
-                alert("Preencha o nome da conta.");
-                return;
-            }
-
-            if(!editId) {
-                const newId = 'acc_' + Date.now();
-                accountsData.push({ id: newId, competencia, name, type, value, icon });
-                showToast("Nova conta adicionada com sucesso!");
-            } else {
-                const acc = accountsData.find(a => a.id === editId);
-                if(acc) {
-                    acc.competencia = competencia;
-                    acc.name = name;
-                    acc.type = type;
-                    acc.value = value;
-                    acc.icon = icon;
-                    showToast("Conta atualizada com sucesso!");
-                }
-            }
-
-            closeModal('modal-account');
-            document.getElementById('finance-month-filter').value = competencia;
-            renderAccounts();
-        }
-
-        function deleteAccount(id) {
-            if(confirm("Deseja realmente remover esta conta da prestação de contas?")) {
-                accountsData = accountsData.filter(a => a.id !== id);
-                renderAccounts();
-                showToast("Conta removida com sucesso!", "error");
-            }
-        }
-
-        // Filter Functionality for Pendencias
         function filterPendencias() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const statusFilter = document.getElementById('filter-status').value;
 
             const filtered = pendenciasData.filter(item => {
-                const matchQuery = item.local.toLowerCase().includes(query) || item.prob.toLowerCase().includes(query) || item.ref.toLowerCase().includes(query);
+                const matchText = item.local.toLowerCase().includes(query) || item.prob.toLowerCase().includes(query) || item.ref.toLowerCase().includes(query);
                 const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
-                return matchQuery && matchStatus;
+                return matchText && matchStatus;
             });
 
             renderTable(filtered);
         }
 
-        // Toggle Status Quickly
         function toggleStatus(id) {
             const item = pendenciasData.find(i => i.id === id);
             if(item) {
                 item.status = item.status === 'OK' ? 'PENDENTE' : 'OK';
+                if(item.status === 'OK' && !item.termino) {
+                    const d = new Date();
+                    item.termino = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+                }
                 renderTable();
-                showToast(`Status do item #${id} atualizado para ${item.status}`);
+                showToast(`Status do item #${id} alterado para ${item.status}`);
             }
         }
 
-        // Delete Item
-        function deletePendencia(id) {
-            if(confirm("Deseja realmente excluir este registro?")) {
-                pendenciasData = pendenciasData.filter(i => i.id !== id);
-                renderTable();
-                showToast("Item excluído com sucesso!", "error");
-            }
-        }
-
-        // Modal Controls
         function openAddItemModal() {
             document.getElementById('modal-title').innerText = "Adicionar Nova Pendência";
             document.getElementById('edit-index').value = "-1";
             document.getElementById('m-local').value = "";
             document.getElementById('m-ref').value = "";
             document.getElementById('m-prob').value = "";
+            document.getElementById('m-inicio').value = "";
+            document.getElementById('m-termino').value = "";
             document.getElementById('m-status').value = "PENDENTE";
             document.getElementById('modal-pendencia').classList.remove('hidden');
         }
@@ -1388,13 +1067,11 @@
                 document.getElementById('m-local').value = item.local;
                 document.getElementById('m-ref').value = item.ref;
                 document.getElementById('m-prob').value = item.prob;
+                document.getElementById('m-inicio').value = item.inicio || "";
+                document.getElementById('m-termino').value = item.termino || "";
                 document.getElementById('m-status').value = item.status;
                 document.getElementById('modal-pendencia').classList.remove('hidden');
             }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
         }
 
         function savePendencia() {
@@ -1402,6 +1079,8 @@
             const local = document.getElementById('m-local').value.trim();
             const ref = document.getElementById('m-ref').value.trim() || "GERAL";
             const prob = document.getElementById('m-prob').value.trim();
+            const inicio = document.getElementById('m-inicio').value.trim();
+            const termino = document.getElementById('m-termino').value.trim();
             const status = document.getElementById('m-status').value;
 
             if(!local || !prob) {
@@ -1411,7 +1090,7 @@
 
             if(id === -1) {
                 const newId = pendenciasData.length > 0 ? Math.max(...pendenciasData.map(i => i.id)) + 1 : 1;
-                pendenciasData.unshift({ id: newId, local, ref, prob, status });
+                pendenciasData.unshift({ id: newId, local, ref, prob, inicio, termino, status });
                 showToast("Nova pendência adicionada com sucesso!");
             } else {
                 const item = pendenciasData.find(i => i.id === id);
@@ -1419,6 +1098,8 @@
                     item.local = local;
                     item.ref = ref;
                     item.prob = prob;
+                    item.inicio = inicio;
+                    item.termino = termino;
                     item.status = status;
                     showToast(`Pendência #${id} atualizada com sucesso!`);
                 }
@@ -1428,49 +1109,283 @@
             renderTable();
         }
 
-        function parseMoney(str) {
-            if(!str) return 0;
-            return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+        function deletePendencia(id) {
+            if(confirm("Deseja realmente excluir este item da vistoria?")) {
+                pendenciasData = pendenciasData.filter(i => i.id !== id);
+                renderTable();
+                showToast("Item excluído.");
+            }
         }
 
-        // Toast Feedback Notification
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-msg');
-            const iconEl = document.getElementById('toast-icon');
+        // --- PRESTAÇÃO DE CONTAS LOGIC ---
+        function initCompetenciaSelector() {
+            const select = document.getElementById('competencia-filter');
+            const competencias = [...new Set(accountsData.map(a => a.competencia))];
+            
+            select.innerHTML = '';
+            competencias.forEach(comp => {
+                const opt = document.createElement('option');
+                opt.value = comp;
+                opt.innerText = comp;
+                select.appendChild(opt);
+            });
 
-            msgEl.innerText = msg;
-            if(type === 'error') {
-                iconEl.className = "fa-solid fa-circle-exclamation text-rose-400";
-            } else {
-                iconEl.className = "fa-solid fa-circle-check text-emerald-400";
+            if(competencias.length > 0) {
+                select.value = competencias[competencias.length - 1]; // Latest default
             }
 
+            renderAccounts();
+        }
+
+        function renderAccounts() {
+            const comp = document.getElementById('competencia-filter').value;
+            document.getElementById('current-competencia-label').innerText = `Competência: ${comp}`;
+
+            const filtered = accountsData.filter(a => a.competencia === comp);
+            const tbody = document.getElementById('accounts-tbody');
+            tbody.innerHTML = '';
+
+            let credor = 0;
+            let devedor = 0;
+
+            filtered.forEach(acc => {
+                if(acc.type === 'credor') credor += acc.value;
+                else devedor += acc.value;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 transition";
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-white">${acc.name}</td>
+                    <td class="p-4 text-slate-400 font-mono text-[11px]">${acc.competencia}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${acc.type === 'credor' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}">
+                            ${acc.type === 'credor' ? 'Saldo Credor' : 'Saldo Devedor'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right font-mono font-bold ${acc.type === 'credor' ? 'text-emerald-400' : 'text-rose-400'}">
+                        ${acc.type === 'credor' ? '+ ' : '- '} ${formatMoney(acc.value)}
+                    </td>
+                    <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                        <button onclick="secureAction(() => editAccount(${acc.id}))" title="Editar" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="secureAction(() => deleteAccount(${acc.id}))" title="Excluir" class="text-rose-400 hover:text-rose-300 p-1 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            let liquido = credor - devedor;
+
+            // Render cards summary
+            const cardsContainer = document.getElementById('finance-cards');
+            cardsContainer.innerHTML = `
+                <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-sm">
+                    <p class="text-xs text-slate-400">Total Credor (Entradas)</p>
+                    <h3 class="text-xl font-bold text-emerald-400 mt-1">${formatMoney(credor)}</h3>
+                </div>
+                <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-sm">
+                    <p class="text-xs text-slate-400">Total Devedor (Saídas/IPTU)</p>
+                    <h3 class="text-xl font-bold text-rose-400 mt-1">${formatMoney(devedor)}</h3>
+                </div>
+                <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-sm">
+                    <p class="text-xs text-slate-400">Saldo Líquido em Caixa</p>
+                    <h3 class="text-xl font-bold text-indigo-400 mt-1">${formatMoney(liquido)}</h3>
+                </div>
+            `;
+
+            localStorage.setItem('horizon_accounts', JSON.stringify(accountsData));
+        }
+
+        function openAddAccountModal() {
+            document.getElementById('modal-conta-title').innerText = "Adicionar Nova Conta";
+            document.getElementById('edit-conta-id').value = "";
+            document.getElementById('c-name').value = "";
+            document.getElementById('c-competencia').value = document.getElementById('competencia-filter').value || "Outubro/2026";
+            document.getElementById('c-type').value = "credor";
+            document.getElementById('c-value').value = "";
+            document.getElementById('modal-conta').classList.remove('hidden');
+        }
+
+        function editAccount(id) {
+            const acc = accountsData.find(a => a.id === id);
+            if(acc) {
+                document.getElementById('modal-conta-title').innerText = `Editar Conta #${id}`;
+                document.getElementById('edit-conta-id').value = id;
+                document.getElementById('c-name').value = acc.name;
+                document.getElementById('c-competencia').value = acc.competencia;
+                document.getElementById('c-type').value = acc.type;
+                document.getElementById('c-value').value = acc.value.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('modal-conta').classList.remove('hidden');
+            }
+        }
+
+        function saveAccount() {
+            const id = document.getElementById('edit-conta-id').value;
+            const name = document.getElementById('c-name').value.trim();
+            const competencia = document.getElementById('c-competencia').value.trim();
+            const type = document.getElementById('c-type').value;
+            const valStr = document.getElementById('c-value').value.trim().replace(/\./g, '').replace(',', '.');
+            const value = parseFloat(valStr);
+
+            if(!name || !competencia || isNaN(value)) {
+                alert("Preencha todos os campos corretamente.");
+                return;
+            }
+
+            if(!id) {
+                const newId = accountsData.length > 0 ? Math.max(...accountsData.map(a => a.id)) + 1 : 1;
+                accountsData.push({ id: newId, name, competencia, type, value });
+                showToast("Conta adicionada com sucesso!");
+            } else {
+                const acc = accountsData.find(a => a.id == id);
+                if(acc) {
+                    acc.name = name;
+                    acc.competencia = competencia;
+                    acc.type = type;
+                    acc.value = value;
+                    showToast("Conta atualizada com sucesso!");
+                }
+            }
+
+            closeModal('modal-conta');
+            initCompetenciaSelector();
+        }
+
+        function deleteAccount(id) {
+            if(confirm("Deseja realmente excluir esta conta?")) {
+                accountsData = accountsData.filter(a => a.id !== id);
+                initCompetenciaSelector();
+                showToast("Conta removida.");
+            }
+        }
+
+        // --- SUGESTÕES & BENFEITORIAS LOGIC (NO PIN REQUIRED) ---
+        function renderSugestoes() {
+            const grid = document.getElementById('sugestoes-grid');
+            grid.innerHTML = '';
+
+            sugestoesData.forEach(item => {
+                let badge = 'bg-slate-700 text-slate-300';
+                if(item.status === 'Aprovada') badge = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                if(item.status === 'Em Análise') badge = 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                if(item.status === 'Em Execução') badge = 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-800/90 border border-slate-700 p-6 rounded-3xl shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${badge}">${item.status}</span>
+                            <span class="text-xs font-mono text-slate-400">Prioridade: <strong class="text-white">${item.priority}</strong></span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">${item.title}</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">${item.desc}</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-700 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Custo Estimado</span>
+                            <span class="font-mono font-bold text-amber-400 text-sm">${formatMoney(item.cost)}</span>
+                        </div>
+                        <div class="space-x-1">
+                            <button onclick="editSugestao(${item.id})" title="Editar" class="text-slate-400 hover:text-white p-1.5 cursor-pointer"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteSugestao(${item.id})" title="Excluir" class="text-rose-400 hover:text-rose-300 p-1.5 cursor-pointer"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            localStorage.setItem('horizon_sugestoes', JSON.stringify(sugestoesData));
+        }
+
+        function openAddSugestaoModal() {
+            document.getElementById('modal-sug-title').innerText = "Nova Sugestão / Benfeitoria";
+            document.getElementById('edit-sug-id').value = "";
+            document.getElementById('s-title').value = "";
+            document.getElementById('s-desc').value = "";
+            document.getElementById('s-cost').value = "";
+            document.getElementById('s-priority').value = "Média";
+            document.getElementById('s-status').value = "Proposta";
+            document.getElementById('modal-sugestao').classList.remove('hidden');
+        }
+
+        function editSugestao(id) {
+            const item = sugestoesData.find(i => i.id === id);
+            if(item) {
+                document.getElementById('modal-sug-title').innerText = `Editar Benfeitoria #${id}`;
+                document.getElementById('edit-sug-id').value = id;
+                document.getElementById('s-title').value = item.title;
+                document.getElementById('s-desc').value = item.desc;
+                document.getElementById('s-cost').value = item.cost.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('s-priority').value = item.priority;
+                document.getElementById('s-status').value = item.status;
+                document.getElementById('modal-sugestao').classList.remove('hidden');
+            }
+        }
+
+        function saveSugestao() {
+            const id = document.getElementById('edit-sug-id').value;
+            const title = document.getElementById('s-title').value.trim();
+            const desc = document.getElementById('s-desc').value.trim();
+            const costStr = document.getElementById('s-cost').value.trim().replace(/\./g, '').replace(',', '.');
+            const cost = parseFloat(costStr) || 0;
+            const priority = document.getElementById('s-priority').value;
+            const status = document.getElementById('s-status').value;
+
+            if(!title) { alert("Preencha o título da sugestão."); return; }
+
+            if(!id) {
+                const newId = sugestoesData.length > 0 ? Math.max(...sugestoesData.map(i => i.id)) + 1 : 1;
+                sugestoesData.unshift({ id: newId, title, desc, cost, priority, status });
+                showToast("Sugestão adicionada com sucesso!");
+            } else {
+                const item = sugestoesData.find(i => i.id == id);
+                if(item) {
+                    item.title = title;
+                    item.desc = desc;
+                    item.cost = cost;
+                    item.priority = priority;
+                    item.status = status;
+                    showToast("Sugestão atualizada!");
+                }
+            }
+            closeModal('modal-sugestao');
+            renderSugestoes();
+        }
+
+        function deleteSugestao(id) {
+            if(confirm("Deseja realmente remover esta sugestão?")) {
+                sugestoesData = sugestoesData.filter(i => i.id !== id);
+                renderSugestoes();
+                showToast("Sugestão removida.");
+            }
+        }
+
+        // --- UTILS & PDF EXPORT ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function formatMoney(val) {
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
             toast.classList.remove('translate-y-20', 'opacity-0');
             setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
         }
 
-        // PDF Export Handler using window.print()
-        function triggerPDF() {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('hidden'));
+        function triggerPDFExport() {
             window.print();
-            setTimeout(() => {
-                switchTab('dashboard');
-            }, 500);
         }
 
-        // Initialize App on Load
+        // Initial Load
         window.onload = function() {
-            document.getElementById('global-reference-month').value = globalRefMonth;
-            updateGlobalReference(globalRefMonth);
-            renderPlano();
-            renderTable();
-            renderAccounts();
-            renderSugestoes();
+            updateDashboard();
         };
     </script>
-
 </body>
 </html>
