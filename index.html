@@ -734,14 +734,87 @@
 
         // Prestação de Contas
         let accountsData = JSON.parse(localStorage.getItem('horizon_accounts')) || [
+            // Fevereiro/2026
+            { id: 101, name: "Conta Ordinária", competencia: "Fevereiro/2026", type: "credor", value: 15955.81 },
+            { id: 102, name: "Benfeitorias", competencia: "Fevereiro/2026", type: "credor", value: 1596.65 },
+            { id: 103, name: "Fundo de Reserva", competencia: "Fevereiro/2026", type: "credor", value: 71199.75 },
+            { id: 104, name: "I.P.T.U.", competencia: "Fevereiro/2026", type: "devedor", value: 49445.75 },
+            { id: 105, name: "Segurança", competencia: "Fevereiro/2026", type: "devedor", value: 2276.24 },
+            { id: 106, name: "Salão Festas/Churrasqueira", competencia: "Fevereiro/2026", type: "credor", value: 6854.94 },
+            { id: 107, name: "Consumo", competencia: "Fevereiro/2026", type: "devedor", value: 24564.20 },
+            { id: 108, name: "Material Implantação", competencia: "Fevereiro/2026", type: "credor", value: 37524.98 },
+
+            // Abril/2026
+            { id: 201, name: "Conta Ordinária", competencia: "Abril/2026", type: "credor", value: 23241.69 },
+            { id: 202, name: "Benfeitorias", competencia: "Abril/2026", type: "credor", value: 1596.65 },
+            { id: 203, name: "Fundo de Reserva", competencia: "Abril/2026", type: "credor", value: 81347.37 },
+            { id: 204, name: "I.P.T.U.", competencia: "Abril/2026", type: "devedor", value: 51267.35 },
+            { id: 205, name: "Segurança", competencia: "Abril/2026", type: "credor", value: 1420.70 },
+            { id: 206, name: "Salão Festas/Churrasqueira", competencia: "Abril/2026", type: "credor", value: 9311.59 },
+            { id: 207, name: "Consumo", competencia: "Abril/2026", type: "devedor", value: 36086.61 },
+            { id: 208, name: "Material Implantação", competencia: "Abril/2026", type: "credor", value: 35939.92 },
+            { id: 209, name: "Individualização", competencia: "Abril/2026", type: "credor", value: 1834.65 },
+
+            // Maio/2026
+            { id: 301, name: "Conta Ordinária", competencia: "Maio/2026", type: "credor", value: 11588.27 },
+            { id: 302, name: "Benfeitorias", competencia: "Maio/2026", type: "credor", value: 14166.33 },
+            { id: 303, name: "Fundo de Reserva", competencia: "Maio/2026", type: "credor", value: 86969.24 },
+            { id: 304, name: "I.P.T.U.", competencia: "Maio/2026", type: "devedor", value: 46594.69 },
+            { id: 305, name: "Segurança", competencia: "Maio/2026", type: "credor", value: 4333.13 },
+            { id: 306, name: "Salão Festas/Churrasqueira", competencia: "Maio/2026", type: "credor", value: 11780.64 },
+            { id: 307, name: "Consumo", competencia: "Maio/2026", type: "devedor", value: 50389.09 },
+            { id: 308, name: "Material Implantação", competencia: "Maio/2026", type: "credor", value: 36462.68 },
+            { id: 309, name: "Individualização", competencia: "Maio/2026", type: "credor", value: 1262.52 },
+
+            // Junho/2026
+            { id: 401, name: "Conta Ordinária", competencia: "Junho/2026", type: "credor", value: 9238.03 },
+            { id: 402, name: "Benfeitorias", competencia: "Junho/2026", type: "credor", value: 24666.75 },
+            { id: 403, name: "Fundo de Reserva", competencia: "Junho/2026", type: "credor", value: 92160.37 },
+            { id: 404, name: "I.P.T.U.", competencia: "Junho/2026", type: "devedor", value: 27435.40 },
+            { id: 405, name: "Segurança", competencia: "Junho/2026", type: "credor", value: 4333.13 },
+            { id: 406, name: "Salão Festas/Churrasqueira", competencia: "Junho/2026", type: "credor", value: 13266.47 },
+            { id: 407, name: "Consumo", competencia: "Junho/2026", type: "devedor", value: 23944.36 },
+            { id: 408, name: "Material Implantação", competencia: "Junho/2026", type: "credor", value: 36462.68 },
+            { id: 409, name: "Individualização", competencia: "Junho/2026", type: "devedor", value: 1632.02 },
+
+            // Julho/2026
+            { id: 501, name: "Conta Ordinária", competencia: "Julho/2026", type: "credor", value: 8048.65 },
+            { id: 502, name: "Benfeitorias", competencia: "Julho/2026", type: "credor", value: 16707.86 },
+            { id: 503, name: "Fundo de Reserva", competencia: "Julho/2026", type: "credor", value: 97497.52 },
+            { id: 504, name: "I.P.T.U.", competencia: "Julho/2026", type: "devedor", value: 26822.63 },
+            { id: 505, name: "Segurança", competencia: "Julho/2026", type: "credor", value: 4333.13 },
+            { id: 506, name: "Salão Festas/Churrasqueira", competencia: "Julho/2026", type: "credor", value: 14073.23 },
+            { id: 507, name: "Consumo", competencia: "Julho/2026", type: "devedor", value: 25768.46 },
+            { id: 508, name: "Material Implantação", competencia: "Julho/2026", type: "credor", value: 36462.68 },
+            { id: 509, name: "Individualização", competencia: "Julho/2026", type: "devedor", value: 1384.74 },
+
+            // Agosto/2026
+            { id: 601, name: "Conta Ordinária", competencia: "Agosto/2026", type: "credor", value: 11331.28 },
+            { id: 602, name: "Benfeitorias", competencia: "Agosto/2026", type: "credor", value: 12926.22 },
+            { id: 603, name: "Fundo de Reserva", competencia: "Agosto/2026", type: "credor", value: 102662.95 },
+            { id: 604, name: "I.P.T.U.", competencia: "Agosto/2026", type: "devedor", value: 2139.01 },
+            { id: 605, name: "Segurança", competencia: "Agosto/2026", type: "credor", value: 4333.13 },
+            { id: 606, name: "Salão Festas/Churrasqueira", competencia: "Agosto/2026", type: "credor", value: 15395.00 },
+            { id: 607, name: "Consumo", competencia: "Agosto/2026", type: "devedor", value: 25570.44 },
+            { id: 608, name: "Material Implantação", competencia: "Agosto/2026", type: "credor", value: 36462.68 },
+            { id: 609, name: "Individualização", competencia: "Agosto/2026", type: "devedor", value: 496.48 },
+
+            // Setembro/2026
             { id: 1, name: "Conta Ordinária", competencia: "Setembro/2026", type: "credor", value: 11928.56 },
             { id: 2, name: "Fundo de Reserva", competencia: "Setembro/2026", type: "credor", value: 107882.17 },
             { id: 3, name: "Benfeitorias", competencia: "Setembro/2026", type: "credor", value: 9591.62 },
             { id: 4, name: "I.P.T.U.", competencia: "Setembro/2026", type: "devedor", value: 2139.01 },
-            { id: 5, name: "Conta Ordinária", competencia: "Outubro/2026", type: "credor", value: 13500.00 },
-            { id: 6, name: "Fundo de Reserva", competencia: "Outubro/2026", type: "credor", value: 109200.00 },
-            { id: 7, name: "Benfeitorias", competencia: "Outubro/2026", type: "credor", value: 9591.62 },
-            { id: 8, name: "I.P.T.U.", competencia: "Outubro/2026", type: "devedor", value: 1950.00 }
+            { id: 5, name: "Segurança", competencia: "Setembro/2026", type: "credor", value: 4333.13 },
+            { id: 6, name: "Salão Festas/Churrasqueira", competencia: "Setembro/2026", type: "credor", value: 16962.86 },
+            { id: 7, name: "Consumo", competencia: "Setembro/2026", type: "devedor", value: 31614.28 },
+            { id: 8, name: "Material Implantação", competencia: "Setembro/2026", type: "credor", value: 36462.68 },
+            { id: 9, name: "Individualização", competencia: "Setembro/2026", type: "devedor", value: 483.10 },
+
+            // Outubro/2026
+            { id: 10, name: "Conta Ordinária", competencia: "Outubro/2026", type: "credor", value: 13500.00 },
+            { id: 11, name: "Fundo de Reserva", competencia: "Outubro/2026", type: "credor", value: 109200.00 },
+            { id: 12, name: "Benfeitorias", competencia: "Outubro/2026", type: "credor", value: 9591.62 },
+            { id: 13, name: "I.P.T.U.", competencia: "Outubro/2026", type: "devedor", value: 1950.00 }
         ];
 
         // Plano de Ação
@@ -1120,18 +1193,20 @@
         // --- PRESTAÇÃO DE CONTAS LOGIC ---
         function initCompetenciaSelector() {
             const select = document.getElementById('competencia-filter');
-            const competencias = [...new Set(accountsData.map(a => a.competencia))];
+            const orderedComps = ["Fevereiro/2026", "Abril/2026", "Maio/2026", "Junho/2026", "Julho/2026", "Agosto/2026", "Setembro/2026", "Outubro/2026"];
             
             select.innerHTML = '';
-            competencias.forEach(comp => {
-                const opt = document.createElement('option');
-                opt.value = comp;
-                opt.innerText = comp;
-                select.appendChild(opt);
+            orderedComps.forEach(comp => {
+                if(accountsData.some(a => a.competencia === comp)) {
+                    const opt = document.createElement('option');
+                    opt.value = comp;
+                    opt.innerText = comp;
+                    select.appendChild(opt);
+                }
             });
 
-            if(competencias.length > 0) {
-                select.value = competencias[competencias.length - 1]; // Latest default
+            if(select.options.length > 0) {
+                select.value = "Setembro/2026"; // Default active
             }
 
             renderAccounts();
